@@ -1,0 +1,2 @@
+ENUM: CREATE TYPE category AS ENUM('Main','Side','Veg');
+
