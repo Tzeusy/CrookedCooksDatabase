@@ -1,2 +1,6 @@
 ENUM: CREATE TYPE category AS ENUM('Main','Side','Veg');
 
+Changing entries: UPDATE database_name SET data_variable WHERE condition
+
+Builtin functions: MAX(_), AVG(_), MIN(_),
+
