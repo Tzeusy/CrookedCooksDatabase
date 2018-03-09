@@ -5,5 +5,3 @@ with connection.cursor() as cursor:
     cursor.execute("SELECT * FROM menu")
     a = cursor.fetchall()
     print(a)
-    # connection.commit()
-    # print(a)
