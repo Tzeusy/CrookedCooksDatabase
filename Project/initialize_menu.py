@@ -4,7 +4,6 @@ from connection_pool import ConnectionFromPool
 
 # connection = psycopg2.connect(database='Crooked Cooks', user='postgres', password='1234', host='localhost')
 with ConnectionFromPool() as cursor:
-#TODO: Add true or false to each entry for if the food item is still available
 #TODO: JSON to menuList converter
 
     menuList = []
@@ -36,6 +35,6 @@ with ConnectionFromPool() as cursor:
     cursor.execute('CREATE TABLE menu (itemid SERIAL PRIMARY KEY, food_category category, food_id integer, name text, description text, price numeric(4,2),image_link text,is_available boolean)')
 
     for item in menuList:
-        print(item[1])
         cursor.execute("INSERT INTO menu(food_category, food_id, name,description,price,image_link,is_available) "
                        "VALUES('{}','{}','{}','{}',{},'{}','{}')".format(item[0],item[1],item[2],item[3],item[4],item[5],item[6]))
+    print("Menu successfully added!")

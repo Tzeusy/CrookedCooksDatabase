@@ -1,26 +1,18 @@
 from flask import Flask, render_template, request, abort
+import flask
 import psycopg2
 import json
 from initialize_session import flush_database
+
 from connection_pool import ConnectionFromPool
+from pullMenu import getMenu
+from databaseAccessMethods import *
+#DatabaseAccessMethods are the VOID methods - that is, these methods take in parameters, and do not return values.
+#DatabaseRequestMethods are the JSON-returning methods, which are used to provide output to the API.
+
+import datetime
 
 app = Flask(__name__)
-
-def getMenu(tablenumber):
-    restaurantName = "Crooked Cooks"
-    with ConnectionFromPool() as cursor:
-        cursor.execute("SELECT array_to_json(array_agg(menu)) FROM menu")
-        menuArray = cursor.fetchall()
-    menuArray = menuArray[0][0]
-    menuItems = []
-    for item in menuArray:
-        jsonString = str(item)
-        menuItems.append(jsonString)
-    menuString = ','.join(menuItem for menuItem in menuItems)
-    menuString = menuString.replace("'", '"')
-    imageLink = "https://i.imgur.com/XvlwlIn.jpg"
-    fullJSON = '{{"name":"{}","imagehyperlink":"{}","menu":[ {} ]}}'.format(restaurantName, imageLink, menuString)
-    return fullJSON
 
 @app.route('/api/menu')
 def menu():
@@ -32,10 +24,26 @@ def menu():
         return render_template('404.html'), 404
 
 @app.route('/api/make_order', methods=['GET', 'POST'])
-def add_message(uuid):
-    content = request.json
-    print(content)
-    return uuid
+# def makeorder(uuid):
+#USE UUID FOR ACTUAL POST REQUESTS. IT'S LIKE THIS FOR DEBUGGING THE FUNCTIONALITY.
+def makeorder():
+    # content = request.json
+    # print(content)
+    print("test")
+    if flask.request.method == 'GET':
+        #TODO: Convert json's to a CUSTOMER ID, and an array of tuples with [(food_id, comment),(food_id,comment),...] as the items.
+        #placeholder
+        print("test")
+        customerId = 75
+        jsonItems = [(103,"hello"),(203,"world")]
+
+        print("Customer {} making orders {}".format(customerId,jsonItems))
+        orders = [jsonItem[0] for jsonItem in jsonItems]
+        comments = [jsonItem[1] for jsonItem in jsonItems]
+        make_order(customer_id=customerId,items=orders,comments=comments)
+        return "Success"
+    else:
+        return "Fail"
 
 @app.route('/api/existing_orders')
 def get_orders():
@@ -47,7 +55,7 @@ def get_orders():
                  "WHERE session.end_time IS null"
     transacnum = request.args.get('number')
     if(transacnum is not None):
-        sqlCommand += "WHERE session.transaction_id = "+transacnnum
+        sqlCommand += "WHERE session.transaction_id = "+transacnum
     else:
         sqlCommand += "WHERE session.end_time IS null"
 
@@ -57,13 +65,42 @@ def get_orders():
         cursor.execute(sqlCommand)
         menuArray = cursor.fetchall()
 
-@app.route('/api/tableno')
+@app.route('/api/register')
 def tableno():
-    tablenum = request.args.get('number')
+    possible_parameters = ['table_number','plid','numpeople']
+    parameter_existence = [elem in request.args for elem in possible_parameters]
+    tablenum = request.args.get('table_number')
     userid = request.args.get('plid')
-    #TODO: Create entry in database with table number and user id at this timestamp
-    #Return T,F, or N for needsNumPeople, noNeedNumPeople, or invalidTableNo. accordingly
-    return 'Success'
+    num_people = request.args.get('numpeople')
+
+    try:
+        tablenum = int(tablenum)
+        userid = int(userid)
+        num_people = int(num_people)
+    except ValueError:
+        return ("Invalid parameters - was one of them a string?")
+    except TypeError:
+        pass
+
+    if(all(parameter_existence)):
+        print("Creating new entry with Table Number {}, UserID {}, Numpeople {}".format(tablenum, userid,num_people))
+        enter_restaurant(customer_id=userid,table_number=tablenum,num_people=num_people)
+        return "Entry created with number of people"
+
+    elif(parameter_existence[0] and parameter_existence[1] and not parameter_existence[2]):
+        if(tablenum>=0 and tablenum<50):
+            return "Requesting number of people"
+        elif(tablenum>=50 and tablenum<100):
+            #Not necessary for num people.
+            with ConnectionFromPool() as cursor:
+                cursor.execute("INSERT INTO session(table_number,customer_id,start_time) "
+                               "VALUES({},{},NOW())".format(tablenum, userid))
+                transactionNumber = cursor.execute("SELECT transaction_id FROM session WHERE customer")
+            return "Entry created without number of people"
+        else:
+            return "Invalid"
+    else:
+        return "Invalid"
 
 @app.route('/api/numpeople')
 def numpeople():

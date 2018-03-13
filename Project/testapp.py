@@ -29,7 +29,7 @@ class menuTestCase(TestServerMethods):
         self.assertTrue(is_json(r.content.decode("utf-8")))
 
     def test_nonexistentTable(self):
-        failedR = requests.get(self.baseaddress + "api/menu?tablenumber=" + "52")
+        failedR = requests.get(self.baseaddress + "api/menu?tablenumber=" + "103")
         # print("Nonexistent table test:", failedR.status_code)
         self.assertEqual(str(failedR.status_code),"404")
 
