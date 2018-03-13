@@ -55,12 +55,13 @@ def query_price(table_number,customer_id):
 
         orderHistory = cursor.fetchall()
         items = [orders[1] for orders in orderHistory]
-
         return (totalPrice,items)
 
 def end_time(table_number,customer_id):
     with ConnectionFromPool() as cursor:
         latest_transaction_id = get_latest_session(table_number,customer_id)
+        totalPrice, _ = query_price(table_number, customer_id)
+        cursor.execute("UPDATE session SET price = {} WHERE session.transaction_id = {}".format(totalPrice, latest_transaction_id))
         cursor.execute("UPDATE session SET end_time = NOW() WHERE session.transaction_id = {}".format(latest_transaction_id))
 
 if __name__ == "__main__":

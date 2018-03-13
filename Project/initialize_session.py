@@ -5,7 +5,7 @@ from connection_pool import ConnectionFromPool
 def createEmptySession():
     with ConnectionFromPool() as cursor:
         cursor.execute('DROP TABLE IF EXISTS session CASCADE')
-        cursor.execute('CREATE TABLE session (transaction_id SERIAL PRIMARY KEY, table_number integer, customer_id integer, num_people integer, start_time timestamp, end_time timestamp)')
+        cursor.execute('CREATE TABLE session (transaction_id SERIAL PRIMARY KEY, table_number integer, customer_id integer, num_people integer, start_time timestamp, end_time timestamp, total_price float)')
 
 def createEmptyPurchases():
     with ConnectionFromPool() as cursor:
