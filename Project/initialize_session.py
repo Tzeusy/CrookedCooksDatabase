@@ -13,7 +13,7 @@ def createEmptySession():
 def createEmptyPurchases():
     with ConnectionFromPool() as cursor:
         cursor.execute('DROP TABLE IF EXISTS purchases CASCADE')
-        cursor.execute('CREATE TABLE purchases (transaction_id integer NOT NULL, food_id integer NOT NULL, delivered boolean, comments text)')
+        cursor.execute('CREATE TABLE purchases (default_id SERIAL PRIMARY KEY, transaction_id integer NOT NULL, food_id integer NOT NULL, delivered boolean, comments text)')
 
 def createHistory():
     with ConnectionFromPool() as cursor:

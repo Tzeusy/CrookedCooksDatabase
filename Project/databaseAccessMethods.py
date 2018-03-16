@@ -7,11 +7,22 @@ connection = psycopg2.connect(database='Crooked Cooks', user='postgres', passwor
 
 def enter_restaurant(customer_id,table_number,num_people):
     #Creates an entry in the SESSION table. Num people is necessary for Crooked Cooks specifically.
+    #If already in restaurant, return ERROR.
     with ConnectionFromPool() as cursor:
-        transaction_id = int(datetime.now().microsecond*customer_id/1000)
+        cursor.execute("SELECT * FROM session "
+                       "WHERE customer_id = {}".format(customer_id))
+        results = cursor.fetchall()
+        #Checking if already in database; if already in database, return negative
+        if(len(results)>0):
+            return -1
+
+    with ConnectionFromPool() as cursor:
+        transaction_id = int(datetime.now().microsecond*customer_id/1000000)
         print("Creating a new session, with transaction id",transaction_id)
         cursor.execute("INSERT INTO session(transaction_id,table_number,customer_id,num_people,start_time) "
                        "VALUES({},{},{},{},NOW())".format(transaction_id, table_number,customer_id,num_people))
+        print("Creation success")
+    return 1
 
 def make_order(customer_id,items,comments):
     #Creates an entry in the PURCHASES table. Each entry requires a customer id (int), items (int array), and comments (text array)
@@ -22,10 +33,20 @@ def make_order(customer_id,items,comments):
                            "VALUES({},{},false,'{}')".format(transaction_id,items[i],comments[i]))
 
 def order_satisfied(customer_id,food_id,comment):
+    transaction_id, _, _, _, _ = get_stats(customer_id)
+    sqlCommand = "WITH cte AS ( " \
+                 "SELECT default_id " \
+                 "FROM purchases " \
+                 "WHERE transaction_id = {} AND food_id = {} AND comments = '{}' " \
+                 "LIMIT 1) " \
+                 "UPDATE purchases s " \
+                 "SET delivered=true " \
+                 "FROM cte " \
+                 "WHERE s.default_id = cte.default_id".format(transaction_id,food_id,comment)
     with ConnectionFromPool() as cursor:
-        cursor.execute("UPDATE purchases SET delivered = true "
-                       "WHERE food_id = {} AND comments = '{}' AND customer_id = {}"
-                       .format(food_id,comment,customer_id))
+        for i in range (len(items)):
+            cursor.execute(sqlCommand)
+    print("One Order satisfied")
 
 def query_price(customer_id):
     with ConnectionFromPool() as cursor:
@@ -66,7 +87,7 @@ def exit_restaurant(customer_id):
         orderString += '{"'+'","'.join(item for item in orders)+'"}'
         orderString+="'"
         cursor.execute("INSERT INTO history(transaction_id, food_orders, start_time, end_time, total_price)"
-                       "VALUES ({},{},to_timestamp('{}','YYYY-MM-DD HH:MI:SS'),NOW(),{})".format(transaction_id,orderString,start_time,totalPrice))
+                       "VALUES ({},{},to_timestamp('{}','YYYY-MM-DD HH24:MI:SS'),NOW(),{})".format(transaction_id,orderString,start_time,totalPrice))
         cursor.execute("DELETE FROM session WHERE transaction_id = {}".format(transaction_id))
         cursor.execute("DELETE FROM purchases WHERE transaction_id = {}".format(transaction_id))
 
@@ -90,9 +111,9 @@ if __name__ == "__main__":
     items4 = [201,202,203]
     #enter_restaurant(customer_id,table_number,num_people)
     comments1 = ["hi","wat",None,"wat"]
-    comments2 = ["hi", "wat", None, "wat"]
-    comments3 = ["hi", "wat", None, "wat"]
-    comments4 = ["hi", "wat", None, "wat"]
+    comments2 = ["hii", "watt", None, "watt"]
+    comments3 = ["hiii", "wattt", None, "wattt"]
+    comments4 = ["hiiii", "watttt", None, "wattt"]
     enter_restaurant(351,8,4)
     enter_restaurant(106,9,2)
     enter_restaurant(918,1,1)
@@ -103,6 +124,9 @@ if __name__ == "__main__":
     make_order(918, items3,comments3)
     make_order(38150, items4,comments4)
     #query_price(table_id,customer_id)
+    order_satisfied(351,103,"hi")
+    order_satisfied(351, 202, "wat")
+
     print("Customer {}: Price is {} by ordering {}".format(351, query_price(351)[0], query_price(351)[1]))
     print("Customer {}: Price is {} by ordering {}".format(106, query_price(106)[0], query_price(106)[1]))
     print("Customer {}: Price is {} by ordering {}".format(918, query_price(918)[0], query_price(918)[1]))

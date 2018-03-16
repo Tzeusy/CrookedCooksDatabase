@@ -16,20 +16,27 @@ class TestServerMethods(unittest.TestCase):
 
 class menuTestCase(TestServerMethods):
     def test_existentTable(self):
-        menuaddress = self.baseaddress + "api/menu?tablenumber=" + self.tableNumber
+        menuaddress = self.baseaddress + "api/menu?table_number=" + self.tableNumber
         r = requests.get(menuaddress)
         # print("Table 49 test:", r.status_code)
         self.assertEqual(str(r.status_code),"200")
 
     def test_valid_json(self):
-        menuaddress = self.baseaddress + "api/menu?tablenumber=" + self.tableNumber
+        menuaddress = self.baseaddress + "api/menu?table_number=" + self.tableNumber
         r = requests.get(menuaddress)
         # print("Table 49 test:", r.status_code)
         print(r.content.decode("utf-8"))
         self.assertTrue(is_json(r.content.decode("utf-8")))
 
+    # def test_orders(self):
+    #     menuaddress = self.baseaddress + "api/existing_orders" + self.tableNumber
+    #     r = requests.get(menuaddress)
+    #     # print("Table 49 test:", r.status_code)
+    #     print(r.content.decode("utf-8"))
+    #     self.assertTrue(is_json(r.content.decode("utf-8")))
+
     def test_nonexistentTable(self):
-        failedR = requests.get(self.baseaddress + "api/menu?tablenumber=" + "103")
+        failedR = requests.get(self.baseaddress + "api/menu?table_number=" + "103")
         # print("Nonexistent table test:", failedR.status_code)
         self.assertEqual(str(failedR.status_code),"404")
 
