@@ -27,22 +27,25 @@ def menu():
 # def makeorder(uuid):
 #USE UUID FOR ACTUAL POST REQUESTS. IT'S LIKE THIS FOR DEBUGGING THE FUNCTIONALITY.
 def makeorder():
-    # content = request.json
-    # print(content)
-    print("test")
+    customer_id = request.args.get('plid')
     if flask.request.method == 'GET':
-        #TODO: Convert json's to a CUSTOMER ID, and an array of tuples with [(food_id, comment),(food_id,comment),...] as the items.
-        #placeholder
-        customerId = 75
-        jsonItems = [(103,"hello"),(203,"world")]
-
-        print("Customer {} making orders {}".format(customerId,jsonItems))
-        orders = [jsonItem[0] for jsonItem in jsonItems]
-        comments = [jsonItem[1] for jsonItem in jsonItems]
-        make_order(customer_id=customerId,items=orders,comments=comments)
-        return "Success"
+        # #TODO: Convert json's to a CUSTOMER ID, and an array of tuples with [(food_id, comment),(food_id,comment),...] as the items.
+        # #placeholder
+        # customerId = 351
+        # jsonItems = [(103,"hello"),(203,"world"),(101,"interesting")]
+        #
+        # print("Customer {} making orders {}".format(customerId,jsonItems))
+        # orders = [jsonItem[0] for jsonItem in jsonItems]
+        # comments = [jsonItem[1] for jsonItem in jsonItems]
+        # print("Orders: {}, comments: {}".format(orders,comments))
+        # make_order(customer_id=customerId,items=orders,comments=comments)
+        return "Supposed to be a POST request"
     else:
-        return "Fail"
+        content = request.json
+        print(content["orders"])
+        for element in content["orders"]:
+            make_order(customer_id,[element["food_id"]],[element["comment"]])
+        return "Orders made"
 
 @app.route('/api/existing_orders')
 def get_orders():
@@ -56,9 +59,21 @@ def get_orders():
     else:
         print("Customer id not provided - giving all orders")
         return getOrders()
-    #TODO: Convert the info to JSON of table numbers:[{item & quantity},{item & quantity},...]
+
+@app.route('/api/special_order')
+def special_order():
+    #Returns the orders of each unclosed transaction ID, and whether it has been fulfilled or not
+    #//array_to_json(array_agg(session)),array_to_json(array_agg(menu))
+    customer_id = request.args.get('plid')
+    food_id = request.args.get('food_id')
+    comment = request.args.get('comment')
+    additional_price = request.args.get('additional_price')
+    edit_purchase(customer_id,food_id,comment,additional_price)
+    return "Success"
 
 @app.route('/api/register')
+#Sample:
+# 10.12.79.231:4995/api/register?table_number=49&plid=91234567&numpeople=8
 def tableno():
     possible_parameters = ['table_number','plid','numpeople']
     parameter_existence = [elem in request.args for elem in possible_parameters]
@@ -90,6 +105,7 @@ def tableno():
         if(tablenum>=0 and tablenum<50):
             return "True"
         elif(tablenum>=50 and tablenum<100):
+            print("Testing")
             #Not necessary for num people.
             if (enter_restaurant(customer_id=userid, table_number=tablenum, num_people=0) < 0):
                 return "Invalid - entry for customer already exists in table"
@@ -100,12 +116,19 @@ def tableno():
     else:
         return "NIL"
 
-# @app.route('/api/exit')
-# def exitrestaurant():
-#     customer_id = request.args.get('plid')
-#     print("Customer {} exiting restaurant".format(customer_id))
-#     exit_restaurant(customer_id)
+@app.route('/api/queryprice')
+def queryprice():
+    customer_id = request.args.get('plid')
+    totalPrice, timeSpent, orders, customPrice = query_price(customer_id)
+    returnString = "Customer {} has spent {} hours and has orders {} accruing up a total cost of {}".format(customer_id,timeSpent,orders,totalPrice)
+    return returnString,200
 
+@app.route('/api/exit')
+def exitrestaurant():
+    customer_id = request.args.get('plid')
+    print("Customer {} exiting restaurant".format(customer_id))
+    exit_restaurant(customer_id)
+    return ("Customer {} exited restaurant".format(customer_id)),200
 
 @app.route('/api/numpeople')
 def numpeople():

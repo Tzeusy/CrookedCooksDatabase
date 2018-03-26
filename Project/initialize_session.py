@@ -7,13 +7,14 @@ from connection_pool import ConnectionFromPool
 def createEmptySession():
     with ConnectionFromPool() as cursor:
         cursor.execute('DROP TABLE IF EXISTS session CASCADE')
-        cursor.execute('CREATE TABLE session (default_id SERIAL PRIMARY KEY, transaction_id integer, table_number integer, customer_id integer, num_people integer, start_time timestamp)')
+        cursor.execute('CREATE TABLE session (default_id SERIAL PRIMARY KEY, transaction_id integer, table_number integer, customer_id bigint, num_people integer, start_time timestamp)')
     print("Session reset!")
 
 def createEmptyPurchases():
     with ConnectionFromPool() as cursor:
         cursor.execute('DROP TABLE IF EXISTS purchases CASCADE')
-        cursor.execute('CREATE TABLE purchases (default_id SERIAL PRIMARY KEY, transaction_id integer NOT NULL, food_id integer NOT NULL, delivered boolean, comments text)')
+        cursor.execute('CREATE TABLE purchases (default_id SERIAL PRIMARY KEY, transaction_id integer NOT NULL, food_id integer NOT NULL, '
+                       'delivered boolean, comments text, additional_price numeric(4,2))')
 
 def createHistory():
     with ConnectionFromPool() as cursor:
@@ -25,7 +26,7 @@ def createHistory():
 def flush_database():
     createEmptyPurchases()
     createEmptySession()
-    # createHistory()
+    createHistory()
 
 if __name__ == "__main__":
     flush_database()

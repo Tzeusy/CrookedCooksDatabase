@@ -21,7 +21,7 @@ def getOrders(customer_id=None):
     restaurantName = "Crooked Cooks"
     restaurantImage = "https://i.imgur.com/XvlwlIn.jpg"
     sqlCommand = "SELECT session.table_number,session.start_time," \
-                 " purchases.food_id,purchases.delivered,purchases.comments FROM session" \
+                 "menu.price, purchases.food_id,purchases.delivered,purchases.comments,purchases.additional_price FROM session" \
                  " INNER JOIN purchases ON purchases.transaction_id = session.transaction_id" \
                  " INNER JOIN menu ON purchases.food_id = menu.food_id "
     if(customer_id is not None):
@@ -30,7 +30,7 @@ def getOrders(customer_id=None):
     # sqlCommand = "SELECT * FROM session"
     with ConnectionFromPool() as cursor:
         # cursor.execute("SELECT column_name,data_type FROM information_schema.columns WHERE table_name = 'session'");
-        menuHeaders = [("table_number","integer"),("start_time","timestamp without time zone"),("food_id","integer"),("delivered","boolean"),("comments","text")]
+        menuHeaders = [("table_number","integer"),("start_time","timestamp without time zone"),("price","numeric(4,2)"),("food_id","integer"),("delivered","boolean"),("comments","text"),("additional_price","numeric(4,2)")]
         cursor.execute(sqlCommand)
         nonparsedArray = cursor.fetchall()
     finalString = '{{"orders":[{}]}}'.format(jsonifyReply(menuHeaders, nonparsedArray))

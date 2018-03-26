@@ -1,11 +1,18 @@
 from psycopg2 import pool
 
+# connection_pool = pool.SimpleConnectionPool(1,
+#                                             200,
+#                                             database='Crooked Cooks',
+#                                             user='postgres',
+#                                             password='1234',
+#                                             host='localhost')
+
 connection_pool = pool.SimpleConnectionPool(1,
                                             200,
-                                            database='Crooked Cooks',
-                                            user='postgres',
-                                            password='1234',
-                                            host='localhost')
+                                            database='CrookedCooks',
+                                            user='tzehow',
+                                            password='lelbel11',
+                                            host='crookedcooks.cfewjamqqlgk.us-east-2.rds.amazonaws.com')
 
 class ConnectionFromPool:
     def __init__(self):

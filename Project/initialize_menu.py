@@ -4,7 +4,6 @@ from connection_pool import ConnectionFromPool
 
 # connection = psycopg2.connect(database='Crooked Cooks', user='postgres', password='1234', host='localhost')
 with ConnectionFromPool() as cursor:
-#TODO: JSON to menuList converter
 
     menuList = []
     #Mains
