@@ -14,6 +14,9 @@ import datetime
 
 app = Flask(__name__)
 
+#Server is hosted on crookedcooks.elasticbeanstalk.com
+#Deploy updates by running "eb deploy" from CLI within venv
+
 @app.route('/api/menu')
 def menu():
     tablenumber = request.args.get('table_number')
