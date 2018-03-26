@@ -1,6 +1,6 @@
 branch-defaults:
   master:
-    environment: CrookedCooks-dev
+    environment: CrookedCooks
     group_suffix: null
 environment-defaults:
   CrookedCooks:
