@@ -12,19 +12,21 @@ from databaseAccessMethods import *
 
 import datetime
 
-app = Flask(__name__)
+application = app = Flask(__name__)
 
-#Server is hosted on crookedcooks.elasticbeanstalk.com
+#Server is hosted on http://crookedcooks.ap-southeast-1.elasticbeanstalk.com/
 #Deploy updates by running "eb deploy" from CLI within venv
+
 
 @app.route('/api/menu')
 def menu():
     tablenumber = request.args.get('table_number')
-    if(int(tablenumber)>0 and int(tablenumber)<100):
+    if 0 < int(tablenumber) < 100:
         fullJSON = getMenu(tablenumber)
         return fullJSON
     else:
         return render_template('404.html'), 404
+
 
 @app.route('/api/make_order', methods=['GET', 'POST'])
 # def makeorder(uuid):

@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="adf263b8-e7ae-4e55-8137-8781e741eb35" name="Default" comment="Basic Test Cases in testapp.py, fleshed out JSON delivery from app.py">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.elasticbeanstalk/config.yml" afterPath="$PROJECT_DIR$/.elasticbeanstalk/config.yml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Project/app.py" afterPath="$PROJECT_DIR$/Project/app.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -47,8 +46,8 @@
       <file leaf-file-name="app.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Project/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2862">
-              <caret line="159" column="15" lean-forward="false" selection-start-line="159" selection-start-column="15" selection-end-line="159" selection-end-column="15" />
+            <state relative-caret-position="270">
+              <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
               <folding>
                 <element signature="e#0#56#0" expanded="true" />
               </folding>
@@ -106,7 +105,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>query_pric</find>
       <find>query_price</find>
       <find>exit_r</find>
       <find>get</find>
@@ -136,6 +134,7 @@
       <find>query_pr</find>
       <find>query</find>
       <find>query pr</find>
+      <find>flask(</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -802,8 +801,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Project/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2862">
-          <caret line="159" column="15" lean-forward="false" selection-start-line="159" selection-start-column="15" selection-end-line="159" selection-end-column="15" />
+        <state relative-caret-position="270">
+          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
           <folding>
             <element signature="e#0#56#0" expanded="true" />
           </folding>
