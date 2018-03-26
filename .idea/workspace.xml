@@ -2,7 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="adf263b8-e7ae-4e55-8137-8781e741eb35" name="Default" comment="Basic Test Cases in testapp.py, fleshed out JSON delivery from app.py">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Project/app.py" afterPath="$PROJECT_DIR$/Project/app.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Project/app.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Project/connection_pool.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Project/databaseAccessMethods.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Project/initialize_menu.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Project/initialize_session.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Project/pullMenu.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Project/requirements.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Project/templates/404.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Project/templates/home.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Project/test.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Project/testapp.py" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/CrookedCooks.iml" afterPath="$PROJECT_DIR$/.idea/CrookedCooks.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,81 +25,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="initialize_menu.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Project/initialize_menu.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="16" column="5" lean-forward="false" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="connection_pool.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Project/connection_pool.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="32" column="48" lean-forward="true" selection-start-line="32" selection-start-column="48" selection-end-line="32" selection-end-column="48" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="initialize_session.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Project/initialize_session.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="522">
-              <caret line="31" column="20" lean-forward="false" selection-start-line="31" selection-start-column="20" selection-end-line="31" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="app.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Project/app.py">
+        <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+            <state relative-caret-position="360">
+              <caret line="20" column="23" lean-forward="true" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
               <folding>
                 <element signature="e#0#56#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pullMenu.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Project/pullMenu.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-504">
-              <caret line="5" column="25" lean-forward="true" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
-              <folding>
-                <element signature="e#0#46#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="databaseAccessMethods.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Project/databaseAccessMethods.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="95">
-              <caret line="70" column="36" lean-forward="false" selection-start-line="70" selection-start-column="36" selection-end-line="70" selection-end-column="36" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="testapp.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Project/testapp.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="13" column="54" lean-forward="false" selection-start-line="13" selection-start-column="28" selection-end-line="13" selection-end-column="54" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-                <marker date="1521297254203" expanded="true" signature="389:446" ph="..." />
-                <marker date="1521297254203" expanded="true" signature="1332:1470" ph="..." />
               </folding>
             </state>
           </provider>
@@ -191,11 +135,6 @@
               <item name="CrookedCooks" type="b2602c69:ProjectViewProjectNode" />
               <item name="CrookedCooks" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="CrookedCooks" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CrookedCooks" type="462c0819:PsiDirectoryNode" />
-              <item name="Project" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -204,7 +143,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../CVshenanigans" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
   </component>
   <component name="RecentsManager">
@@ -224,7 +163,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.app">
+  <component name="RunManager" selected="Python.app (1)">
     <configuration default="true" type="tests" factoryName="Unittests">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -239,6 +178,23 @@
       <option name="_new_additionalArguments" value="&quot;&quot;" />
       <option name="_new_target" value="&quot;&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
+    </configuration>
+    <configuration name="app (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CrookedCooks" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -308,37 +264,20 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
-    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Project" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CrookedCooks" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Project/test.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-    </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.initialize_session" />
-      <item index="1" class="java.lang.String" itemvalue="Python.test" />
-      <item index="2" class="java.lang.String" itemvalue="Python.databaseAccessMethods" />
-      <item index="3" class="java.lang.String" itemvalue="Python.app" />
-      <item index="4" class="java.lang.String" itemvalue="Python.initialize_menu" />
+      <item index="1" class="java.lang.String" itemvalue="Python.databaseAccessMethods" />
+      <item index="2" class="java.lang.String" itemvalue="Python.app" />
+      <item index="3" class="java.lang.String" itemvalue="Python.initialize_menu" />
+      <item index="4" class="java.lang.String" itemvalue="Python.app (1)" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.app" />
-        <item index="1" class="java.lang.String" itemvalue="Python.initialize_session" />
-        <item index="2" class="java.lang.String" itemvalue="Python.initialize_menu" />
-        <item index="3" class="java.lang.String" itemvalue="Python.databaseAccessMethods" />
-        <item index="4" class="java.lang.String" itemvalue="Python.test" />
+        <item index="0" class="java.lang.String" itemvalue="Python.app (1)" />
+        <item index="1" class="java.lang.String" itemvalue="Python.app" />
+        <item index="2" class="java.lang.String" itemvalue="Python.initialize_session" />
+        <item index="3" class="java.lang.String" itemvalue="Python.initialize_menu" />
+        <item index="4" class="java.lang.String" itemvalue="Python.databaseAccessMethods" />
       </list>
     </recent_temporary>
   </component>
@@ -461,7 +400,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Project/user.py" />
     <entry file="file://$PROJECT_DIR$/Project/test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -487,9 +425,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="748">
           <caret line="47" column="31" lean-forward="false" selection-start-line="47" selection-start-column="31" selection-end-line="47" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#56#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -535,9 +471,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="595">
           <caret line="38" column="22" lean-forward="true" selection-start-line="38" selection-start-column="22" selection-end-line="38" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#56#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -583,9 +517,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
           <caret line="39" column="0" lean-forward="true" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#56#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -624,9 +556,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="702">
           <caret line="42" column="48" lean-forward="true" selection-start-line="42" selection-start-column="48" selection-end-line="42" selection-end-column="48" />
-          <folding>
-            <element signature="e#0#56#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -745,7 +675,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Project/initialize_menu.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
+        <state relative-caret-position="0">
           <caret line="16" column="5" lean-forward="false" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
           <folding />
         </state>
@@ -771,9 +701,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="95">
           <caret line="70" column="36" lean-forward="false" selection-start-line="70" selection-start-column="36" selection-end-line="70" selection-end-column="36" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -781,9 +709,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-504">
           <caret line="5" column="25" lean-forward="true" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -791,18 +717,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="234">
           <caret line="13" column="54" lean-forward="false" selection-start-line="13" selection-start-column="28" selection-end-line="13" selection-end-column="54" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-            <marker date="1521297254203" expanded="true" signature="389:446" ph="..." />
-            <marker date="1521297254203" expanded="true" signature="1332:1470" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Project/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+        <state relative-caret-position="288">
+          <caret line="16" column="77" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="77" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="20" column="23" lean-forward="true" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
           <folding>
             <element signature="e#0#56#0" expanded="true" />
           </folding>

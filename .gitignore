@@ -1,7 +1,6 @@
 venv/
-.idea
-Project/.idea/
-Project/__pycache__/
+.idea/
+__pycache__/
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
