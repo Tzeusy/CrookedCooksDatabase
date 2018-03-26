@@ -2,6 +2,10 @@ branch-defaults:
   master:
     environment: CrookedCooks-dev
     group_suffix: null
+environment-defaults:
+  CrookedCooks:
+    branch: null
+    repository: null
 global:
   application_name: CrookedCooks
   branch: null

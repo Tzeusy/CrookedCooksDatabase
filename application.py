@@ -7,15 +7,15 @@ from pullMenu import *
 
 from connection_pool import ConnectionFromPool
 from databaseAccessMethods import *
-#DatabaseAccessMethods are the VOID methods - that is, these methods take in parameters, and do not return values.
-#DatabaseRequestMethods are the JSON-returning methods, which are used to provide output to the API.
+# DatabaseAccessMethods are the VOID methods - that is, these methods take in parameters, and do not return values.
+# DatabaseRequestMethods are the JSON-returning methods, which are used to provide output to the API.
 
 import datetime
 
 application = app = Flask(__name__)
 
-#Server is hosted on http://crookedcooks.ap-southeast-1.elasticbeanstalk.com/
-#Deploy updates by running "eb deploy" from CLI within venv
+# Server is hosted on http://crookedcooks.ap-southeast-1.elasticbeanstalk.com/
+# Deploy updates by running "eb deploy" from CLI within venv
 
 
 @app.route('/api/menu')
