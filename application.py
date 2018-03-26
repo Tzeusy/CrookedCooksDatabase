@@ -169,4 +169,4 @@ def adminFlush():
         flush_database()
         return "Database flushed"
 
-app.run(host='0.0.0.0',port=4995)
+app.run()
