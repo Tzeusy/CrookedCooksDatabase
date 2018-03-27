@@ -3,56 +3,64 @@ import json
 
 from databaseAccessMethods import *
 
-def getMenu(tableNumber):
-    restaurantName = "Crooked Cooks"
-    restaurantImage = "https://i.imgur.com/XvlwlIn.jpg"
+def getMenu(table_number):
+    restaurant_name = "Crooked Cooks"
+    restaurant_image = "https://i.imgur.com/XvlwlIn.jpg"
 
     with ConnectionFromPool() as cursor:
         cursor.execute("SELECT column_name,data_type FROM information_schema.columns WHERE table_name = 'menu'");
-        menuHeaders = cursor.fetchall()
+        menu_headers = cursor.fetchall()
         cursor.execute("SELECT * FROM menu")
-        nonparsedArray = cursor.fetchall()
+        nonparsed_array = cursor.fetchall()
 
-    finalString = jsonifyReply(menuHeaders,nonparsedArray)
-    fullJSON = '{{"name":"{}","imagehyperlink":"{}","menu":[{}]}}'.format(restaurantName, restaurantImage, finalString)
-    return fullJSON
+    final_string = jsonify_reply(menu_headers,nonparsed_array)
+    full_json = '{{"name":"{}","imagehyperlink":"{}","menu":[{}]}}'.format(restaurant_name, restaurant_image, final_string)
+    return full_json
 
 def getOrders(customer_id=None):
-    restaurantName = "Crooked Cooks"
-    restaurantImage = "https://i.imgur.com/XvlwlIn.jpg"
-    sqlCommand = "SELECT session.table_number,session.start_time," \
+    sql_command = "SELECT session.table_number,session.start_time," \
                  "menu.price, purchases.food_id,purchases.delivered,purchases.comments,purchases.additional_price FROM session" \
                  " INNER JOIN purchases ON purchases.transaction_id = session.transaction_id" \
                  " INNER JOIN menu ON purchases.food_id = menu.food_id "
     if(customer_id is not None):
-        sqlCommand+="WHERE session.customer_id = {}".format(customer_id)
+        sql_command+="WHERE session.customer_id = {}".format(customer_id)
 
-    # sqlCommand = "SELECT * FROM session"
     with ConnectionFromPool() as cursor:
         # cursor.execute("SELECT column_name,data_type FROM information_schema.columns WHERE table_name = 'session'");
-        menuHeaders = [("table_number","integer"),("start_time","timestamp without time zone"),("price","numeric(4,2)"),("food_id","integer"),("delivered","boolean"),("comments","text"),("additional_price","numeric(4,2)")]
-        cursor.execute(sqlCommand)
-        nonparsedArray = cursor.fetchall()
-    finalString = '{{"orders":[{}]}}'.format(jsonifyReply(menuHeaders, nonparsedArray))
-    return finalString
+        menu_headers = [("table_number","integer"),("start_time","timestamp without time zone"),("price","numeric(4,2)"),("food_id","integer"),("delivered","boolean"),("comments","text"),("additional_price","numeric(4,2)")]
+        cursor.execute(sql_command)
+        nonparsed_array = cursor.fetchall()
+    final_string = '{{"orders":[{}]}}'.format(jsonify_reply(menu_headers, nonparsed_array))
+    return final_string
 
-# def getSession(tableNumber):
-#     restaurantName = "Crooked Cooks"
-#     restaurantImage = "https://i.imgur.com/XvlwlIn.jpg"
+
+def get_session():
+    sql_command = "SELECT * FROM session"
+    with ConnectionFromPool() as cursor:
+        cursor.execute("SELECT column_name,data_type FROM information_schema.columns WHERE table_name = 'session'");
+        session_headers = cursor.fetchall()
+        cursor.execute(sql_command)
+        session_array = cursor.fetchall()
+    final_string = '{{"session":[{}]}}'.format(jsonify_reply(session_headers,session_array))
+    return final_string
+
+# def get_session(table_number):
+#     restaurant_name = "Crooked Cooks"
+#     restaurant_image = "https://i.imgur.com/XvlwlIn.jpg"
 #
 #     with ConnectionFromPool() as cursor:
 #         cursor.execute("SELECT column_name,data_type FROM information_schema.columns WHERE table_name = 'session'")
-#         menuHeaders = cursor.fetchall()
-#         # print(menuHeaders)
+#         menu_headers = cursor.fetchall()
+#         # print(menu_headers)
 #         cursor.execute("SELECT * FROM session")
-#         nonparsedArray = cursor.fetchall()
+#         nonparsed_array = cursor.fetchall()
 #
-#     finalString = '{{"entries":[{}]}}'.format(jsonifyReply(menuHeaders,nonparsedArray))
-#     return finalString
+#     final_string = '{{"entries":[{}]}}'.format(jsonify_reply(menu_headers,nonparsed_array))
+#     return final_string
 
 
 
-def jsonifyReply(headers,rowInformation):
+def jsonify_reply(headers,rowInformation):
     #Returns a string in {"abc":"def","efg":"hij",..},{"abc":"def","efg":"hij",..},... format
 
     #Presumes headers is in [(column_name,data_type),...] format
@@ -88,5 +96,5 @@ def jsonifyReply(headers,rowInformation):
 
 if __name__=="__main__":
     print(getMenu(49))
-    # myNiceText = json.loads(getSession(49))
+    # myNiceText = json.loads(get_session(49))
     # print(json.dumps(myNiceText, sort_keys=True,indent = 4, separators = (',', ': ')))
