@@ -170,4 +170,5 @@ def adminFlush():
         return "Database flushed"
 
 if __name__=='__main__':
+    print("Starting Server...")
     app.run(host='0.0.0.0')
