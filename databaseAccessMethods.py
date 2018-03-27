@@ -3,18 +3,17 @@ from initialize_session import flush_database
 from connection_pool import ConnectionFromPool
 from datetime import datetime
 
-connection = psycopg2.connect(database='Crooked Cooks', user='postgres', password='1234', host='localhost')
 
 def enter_restaurant(customer_id,table_number,num_people):
-    #Creates an entry in the SESSION table. Num people is necessary for Crooked Cooks specifically.
-    #If already in restaurant, return ERROR.
+    # Creates an entry in the SESSION table. Num people is necessary for Crooked Cooks specifically.
+    # If already in restaurant, return ERROR.
     print("Testing Enter Restaurant")
     with ConnectionFromPool() as cursor:
         cursor.execute("SELECT * FROM session "
                        "WHERE customer_id = {}".format(customer_id))
         results = cursor.fetchall()
-        #Checking if already in database; if already in database, return negative
-        if(len(results)>0):
+        # Checking if already in database; if already in database, return negative
+        if len(results) > 0:
             return -1
 
     with ConnectionFromPool() as cursor:
