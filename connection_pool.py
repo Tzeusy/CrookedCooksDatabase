@@ -10,9 +10,10 @@ from psycopg2 import pool
 connection_pool = pool.SimpleConnectionPool(1,
                                             200,
                                             database='CrookedCooks',
-                                            user='tzehow',
+                                            user='Tzeusy',
                                             password='lelbel11',
-                                            host='crookedcooks.cfewjamqqlgk.us-east-2.rds.amazonaws.com')
+                                            host='crookedcooks.csll4kgtocfj.ap-southeast-1.rds.amazonaws.com')
+
 
 class ConnectionFromPool:
     def __init__(self):

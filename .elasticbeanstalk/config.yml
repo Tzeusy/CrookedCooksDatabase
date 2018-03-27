@@ -1,8 +1,11 @@
 branch-defaults:
   master:
-    environment: CrookedCooks
+    environment: Crooked
     group_suffix: null
 environment-defaults:
+  Crooked:
+    branch: null
+    repository: null
   CrookedCooks:
     branch: null
     repository: null
