@@ -1,6 +1,6 @@
 branch-defaults:
   master:
-    environment: Crooked
+    environment: null
     group_suffix: null
 environment-defaults:
   Crooked:

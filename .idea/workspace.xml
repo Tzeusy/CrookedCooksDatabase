@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="adf263b8-e7ae-4e55-8137-8781e741eb35" name="Default" comment="Basic Test Cases in testapp.py, fleshed out JSON delivery from app.py">
+    <list default="true" id="adf263b8-e7ae-4e55-8137-8781e741eb35" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.elasticbeanstalk/config.yml" afterPath="$PROJECT_DIR$/.elasticbeanstalk/config.yml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application.py" afterPath="$PROJECT_DIR$/application.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/connection_pool.py" afterPath="$PROJECT_DIR$/connection_pool.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -29,8 +27,8 @@
       <file leaf-file-name="application.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="12" column="15" lean-forward="true" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="15" />
+            <state relative-caret-position="221">
+              <caret line="79" column="8" lean-forward="true" selection-start-line="79" selection-start-column="8" selection-end-line="79" selection-end-column="8" />
               <folding>
                 <element signature="e#0#56#0" expanded="true" />
               </folding>
@@ -41,8 +39,8 @@
       <file leaf-file-name="connection_pool.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/connection_pool.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="17" column="25" lean-forward="true" selection-start-line="17" selection-start-column="25" selection-end-line="17" selection-end-column="25" />
+            <state relative-caret-position="126">
+              <caret line="7" column="45" lean-forward="true" selection-start-line="7" selection-start-column="45" selection-end-line="7" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -122,7 +120,6 @@
       <find>register?</find>
       <find>/100</find>
       <find>true</find>
-      <find>register</find>
       <find>enter_re</find>
       <find>enter restauran</find>
       <find>integer</find>
@@ -136,6 +133,7 @@
       <find>query</find>
       <find>query pr</find>
       <find>flask(</find>
+      <find>register</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -162,7 +160,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="260" />
     <option name="y" value="20" />
     <option name="width" value="1400" />
@@ -369,7 +367,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520965248292</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Changed to Singapore server on AWS RDS">
+      <created>1522161767097</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1522161767097</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -414,7 +419,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28411514" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -443,7 +448,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Basic Test Cases in testapp.py, fleshed out JSON delivery from app.py" />
     <MESSAGE value="Improvements to the flask server. Standardization of the methods used to access the postgresql database. Code is a lot more readable and accessible now!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Improvements to the flask server. Standardization of the methods used to access the postgresql database. Code is a lot more readable and accessible now!" />
+    <MESSAGE value="Changed to Singapore server on AWS RDS" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed to Singapore server on AWS RDS" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -558,16 +564,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/connection_pool.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="17" column="25" lean-forward="true" selection-start-line="17" selection-start-column="25" selection-end-line="17" selection-end-column="25" />
+        <state relative-caret-position="126">
+          <caret line="7" column="45" lean-forward="true" selection-start-line="7" selection-start-column="45" selection-end-line="7" selection-end-column="45" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/application.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="12" column="15" lean-forward="true" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="15" />
+        <state relative-caret-position="221">
+          <caret line="79" column="8" lean-forward="true" selection-start-line="79" selection-start-column="8" selection-end-line="79" selection-end-column="8" />
           <folding>
             <element signature="e#0#56#0" expanded="true" />
           </folding>
