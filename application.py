@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 import flask
 import stripe
-from credentials import api_key
+# from credentials import api_key
 
 from databaseRequestMethods import *
 from databaseAccessMethods import *
