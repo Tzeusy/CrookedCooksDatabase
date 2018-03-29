@@ -144,7 +144,7 @@ def make_payment():
 
     try:
         charge = stripe.Charge.create(
-        amount=customer_price,
+        amount=int(100*customer_price),
         currency="usd",
         source="{}".format(token_visa),
         description="Test charge",
