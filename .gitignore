@@ -1,6 +1,8 @@
 venv/
 .idea/*
 __pycache__/
+credentials.py
+credentials
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

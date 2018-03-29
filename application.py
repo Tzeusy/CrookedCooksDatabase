@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 import flask
+import stripe
+from credentials import api_key
 
 from databaseRequestMethods import *
 from databaseAccessMethods import *
@@ -23,7 +25,6 @@ def menu():
 
 
 @app.route('/api/make_order', methods=['GET', 'POST'])
-# USE UUID FOR ACTUAL POST REQUESTS. IT'S LIKE THIS FOR DEBUGGING THE FUNCTIONALITY.
 def web_make_order():
     customer_id = request.args.get('plid')
     if flask.request.method == 'GET':
@@ -80,12 +81,12 @@ def table_no():
         userid = int(userid)
         num_people = int(num_people)
     except ValueError:
-        return "Invalid parameters - was one of them a string?"
+        return "Invalid parameters - was one of them a string?", 500
     except TypeError:
         pass
 
     if table_number < 0 or table_number > 100:
-        return "NIL", 400
+        return "NIL", 500
 
     if all(parameter_existence):
         if enter_restaurant(customer_id=userid, table_number=table_number, num_people=num_people) < 0:
@@ -124,6 +125,31 @@ def web_query_price():
     return_string = "Customer {} has spent {} hours and has orders {} accruing up a total cost of {}"\
         .format(customer_id, time_spent, orders, total_price)
     return return_string, 200
+
+
+@app.route('/api/make_payment', methods=['GET'])
+def make_payment():
+    customer_id = request.args.get('plid')
+    user_token = request.args.get('token_id')
+    if not customer_id or not user_token:
+        return "Insufficient parameters", 500
+
+    # account_id = "acct_1CAqhiB8IfO1QxmY"
+    token_visa = "tok_visa"
+    customer_price, _, _, _ = query_price(customer_id)
+
+    try:
+        charge = stripe.Charge.create(
+        amount=customer_price,
+        currency="usd",
+        source="{}".format(token_visa),
+        description="Test charge",
+        transfer_group="placeholder_transfer"
+        )
+        return "Payment Success", 200
+    except:
+        return "Payment Fail", 500
+
 
 
 @app.route('/api/exit')

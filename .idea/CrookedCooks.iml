@@ -10,7 +10,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PackageRequirementsSettings">
-    <option name="requirementsPath" value="C:\Users\Tze\Documents\GitHub\CrookedCooksDatabase\requirements.txt" />
+    <option name="requirementsPath" value="C:\Users\user\Documents\GitHub\CrookedCooks\requirements.txt" />
   </component>
   <component name="TestRunnerService">
     <option name="PROJECT_TEST_RUNNER" value="Unittests" />
