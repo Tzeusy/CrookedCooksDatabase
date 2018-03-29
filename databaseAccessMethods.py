@@ -2,6 +2,7 @@ import psycopg2
 from initialize_session import flush_database
 from connection_pool import ConnectionFromPool
 from datetime import datetime
+import stripe
 
 
 def enter_restaurant(customer_id,table_number,num_people):
@@ -31,6 +32,7 @@ def enter_restaurant(customer_id,table_number,num_people):
         print("Creation success")
     return 1
 
+
 def make_order(customer_id,items,comments):
     #Creates an entry in the PURCHASES table. Each entry requires a customer id (int), items (int array), and comments (text array)
     transaction_id, _, _, _, _ = get_stats(customer_id)
@@ -39,9 +41,10 @@ def make_order(customer_id,items,comments):
             cursor.execute("INSERT INTO purchases(transaction_id,food_id,delivered,comments,additional_price) "
                            "VALUES({},{},false,'{}',0)".format(transaction_id,items[i],comments[i]))
 
+
 def order_satisfied(customer_id,food_id,comment):
     transaction_id, _, _, _, _ = get_stats(customer_id)
-    sqlCommand = "WITH cte AS ( " \
+    sql_command = "WITH cte AS ( " \
                  "SELECT default_id " \
                  "FROM purchases " \
                  "WHERE transaction_id = {} AND food_id = {} AND comments = '{}' " \
@@ -52,24 +55,36 @@ def order_satisfied(customer_id,food_id,comment):
                  "WHERE s.default_id = cte.default_id".format(transaction_id,food_id,comment)
     with ConnectionFromPool() as cursor:
         for i in range (len(items)):
-            cursor.execute(sqlCommand)
+            cursor.execute(sql_command)
     print("One Order satisfied")
+
 
 def edit_purchase(customer_id,food_id,comment,additional_price):
     transaction_id, _, _, _, _ = get_stats(customer_id)
-    sqlCommand = "WITH cte AS ( " \
-                 "SELECT default_id " \
-                 "FROM purchases " \
-                 "WHERE transaction_id = {} AND food_id = {} AND comments = '{}' " \
-                 "LIMIT 1) " \
-                 "UPDATE purchases s " \
-                 "SET additional_price = {} " \
-                 "FROM cte " \
-                 "WHERE s.default_id = cte.default_id".format(transaction_id,food_id,comment,additional_price)
+    sql_command = "WITH cte AS ( " \
+                  "SELECT default_id " \
+                  "FROM purchases " \
+                  "WHERE transaction_id = {} AND food_id = {} AND comments = '{}' " \
+                  "LIMIT 1) " \
+                  "UPDATE purchases s " \
+                  "SET additional_price = {} " \
+                  "FROM cte " \
+                  "WHERE s.default_id = cte.default_id".format(transaction_id,food_id,comment,additional_price)
+    print('adding additional price for custom order')
     with ConnectionFromPool() as cursor:
-        for i in range (len(items)):
-            cursor.execute(sqlCommand)
+        cursor.execute(sql_command)
     print("Order Price changed")
+
+
+def set_delivered(customer_id,food_id):
+    transaction_id, _, _, _, _ = get_stats(customer_id)
+    sql_command = "UPDATE purchases SET delivered = true WHERE " \
+                  "CTID IN (SELECT CTID FROM purchases WHERE transaction_id = {} " \
+                  "AND delivered = false AND food_id = {} LIMIT 1)".format(transaction_id,food_id)
+    with ConnectionFromPool() as cursor:
+        cursor.execute(sql_command)
+        return True
+
 
 def query_price(customer_id):
     #Returns totalPrice, timeSpent, orders, customPrice
@@ -116,6 +131,7 @@ def query_price(customer_id):
         # Returns totalPrice, timeSpent, orders, customPrice
         return (totalPrice,timeSpent,items,commentsSum)
 
+
 def exit_restaurant(customer_id):
     with ConnectionFromPool() as cursor:
         transaction_id, table_number, _, num_people, start_time = get_stats(customer_id)
@@ -128,6 +144,7 @@ def exit_restaurant(customer_id):
         cursor.execute("DELETE FROM session WHERE transaction_id = {}".format(transaction_id))
         cursor.execute("DELETE FROM purchases WHERE transaction_id = {}".format(transaction_id))
 
+
 def get_stats(customer_id):
     with ConnectionFromPool() as cursor:
         cursor.execute("SELECT * FROM session WHERE customer_id = {}".format(customer_id))
@@ -138,6 +155,24 @@ def get_stats(customer_id):
         num_people = item[4]
         start_time = item[5]
         return transaction_id,table_number,customer_id,num_people,start_time
+
+
+def make_payment(customer_id, customer_token="tok_visa"):
+    stripe.api_key = "sk_test_cH2UFk3P0H91hN1oTmo5HZhB"
+    customer_price, _, _, _ = query_price(customer_id)
+    token_visa = customer_token
+    try:
+        charge = stripe.Charge.create(
+            amount=int(100*customer_price),
+            currency="usd",
+            source="{}".format(token_visa),
+            description="Test charge",
+            transfer_group="placeholder_transfer"
+        )
+        exit_restaurant(customer_id)
+        return "Payment Success", 200
+    except:
+        return "Payment Fail", 500
 
 if __name__ == "__main__":
     # flush_database()
