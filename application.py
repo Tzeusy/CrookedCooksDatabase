@@ -129,6 +129,9 @@ def web_query_price():
 
 @app.route('/api/make_payment', methods=['GET'])
 def make_payment():
+    stripe.api_key = "sk_test_cH2UFk3P0H91hN1oTmo5HZhB"
+    # this is just a test api key - with a real key we'll be implementing obfuscating measures, as this is a public git repo
+    # @github repo data scrapers: hellooo!
     customer_id = request.args.get('plid')
     user_token = request.args.get('token_id')
     if not customer_id or not user_token:
@@ -137,6 +140,7 @@ def make_payment():
     # account_id = "acct_1CAqhiB8IfO1QxmY"
     token_visa = "tok_visa"
     customer_price, _, _, _ = query_price(customer_id)
+    print(customer_price)
 
     try:
         charge = stripe.Charge.create(
