@@ -126,10 +126,10 @@ def query_price(customer_id):
                        "WHERE session.transaction_id = {} "
                        "ORDER BY transaction_id".format(transaction_id))
 
-        orderHistory = cursor.fetchall()
-        items = [orders[1] for orders in orderHistory]
+        order_history = cursor.fetchall()
+        items = [orders[1] for orders in order_history]
         # Returns totalPrice, timeSpent, orders, customPrice
-        return (totalPrice,timeSpent,items,commentsSum)
+        return totalPrice,timeSpent,items,commentsSum
 
 
 def exit_restaurant(customer_id):
@@ -139,8 +139,8 @@ def exit_restaurant(customer_id):
         orderString = "'"
         orderString += '{"'+'","'.join(item for item in orders)+'"}'
         orderString+="'"
-        cursor.execute("INSERT INTO history(transaction_id, food_orders, start_time, end_time, total_price)"
-                       "VALUES ({},{},to_timestamp('{}','YYYY-MM-DD HH24:MI:SS'),NOW(),{})".format(transaction_id,orderString,start_time,totalPrice))
+        cursor.execute("INSERT INTO history(transaction_id, customer_id, food_orders, start_time, end_time, total_price)"
+                       "VALUES ({},{},{},to_timestamp('{}','YYYY-MM-DD HH24:MI:SS'),NOW(),{})".format(transaction_id,customer_id,orderString,start_time,totalPrice))
         cursor.execute("DELETE FROM session WHERE transaction_id = {}".format(transaction_id))
         cursor.execute("DELETE FROM purchases WHERE transaction_id = {}".format(transaction_id))
 
@@ -174,6 +174,14 @@ def make_payment(customer_id, customer_token="tok_visa"):
         return True
     except:
         return False
+
+
+def set_availability(food_id,boolean):
+    sql_command = "UPDATE menu SET is_available = {} WHERE food_id = {}".format(boolean,food_id)
+    with ConnectionFromPool() as cursor:
+        cursor.execute(sql_command)
+    return True
+
 
 if __name__ == "__main__":
     # flush_database()

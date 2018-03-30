@@ -39,19 +39,6 @@ def web_make_order():
         return "Orders made", 200
 
 
-@app.route('/api/admin/set_delivered',methods=['GET'])
-def web_set_delivered():
-    customer_id = request.args.get('plid')
-    food_id = request.args.get('food_id')
-    if not customer_id or not food_id:
-        return "Insufficient parameters", 500
-    success = set_delivered(customer_id,food_id)
-    if success:
-        return "Done!", 200
-    else:
-        return "Failed", 500
-
-
 @app.route('/api/existing_orders')
 def get_orders():
     # Returns the orders of each unclosed transaction ID, and whether it has been fulfilled or not
@@ -159,6 +146,70 @@ def web_make_payment():
         return "Payment Fail", 500
 
 
+@app.route('/api/admin/set_availability', methods=['GET'])
+def web_set_unavailable():
+    food_id = request.args.get('food_id')
+    bool = request.args.get('boolean')
+    is_bool_valid = (bool=='true' or bool=='false')
+    if not food_id or not bool or not is_bool_valid:
+        return "Invalid parameters", 500
+    if(set_availability(food_id,bool)):
+        return "Payment Success", 200
+    else:
+        return "Payment Fail", 500
+
+
+@app.route('/api/exit')
+def web_exit_restaurant():
+    customer_id = request.args.get('plid')
+    print("Customer {} exiting restaurant".format(customer_id))
+    exit_restaurant(customer_id)
+    return ("Customer {} exited restaurant".format(customer_id)), 200
+
+
+# ADMIN METHODS
+@app.route('/api/admin/new_menu', methods=['GET', 'POST'])
+def admin_menu():
+    admin_verifier = request.args.get('keycode')
+    our_keycode = '12345'
+    print(admin_verifier)
+    if admin_verifier != our_keycode:
+        return render_template('404.html'), 404
+    else:
+        new_menu = request.get_json()
+        print("JSON Received")
+        print(new_menu)
+        return admin_verifier
+
+
+# Unnecessary - session auto-empties now
+@app.route('/api/admin/flush', methods=['GET'])
+def admin_flush():
+    admin_verifier = request.args.get('keycode')
+    our_keycode = '12345'
+    print(admin_verifier)
+    if admin_verifier != our_keycode:
+        return "Invalid Keycode", 500
+    else:
+        print("Flushing session and purchases")
+        flush_database()
+        return "Database flushed"
+
+
+@app.route('/api/admin/set_delivered',methods=['GET'])
+def web_set_delivered():
+    customer_id = request.args.get('plid')
+    food_id = request.args.get('food_id')
+    if not customer_id or not food_id:
+        return "Insufficient parameters", 500
+    success = set_delivered(customer_id,food_id)
+    if success:
+        return "Done!", 200
+    else:
+        return "Failed", 500
+
+
+# TEST CASES
 @app.route('/api/create_test_case', methods=['GET'])
 def build_fake_customers():
     food_options = [100, 101, 102, 103, 104, 105, 106, 201, 202, 203, 301, 302, 303, 304, 305, 306, 307]
@@ -177,28 +228,6 @@ def build_fake_customers():
 
         enter_restaurant(customer_ids[i], table_number, num_people)
         make_order(customer_ids[i], purchased_items[i], comments[i])
-
-    # items = [103, 106, 303, 202]
-    # items2 = [102, 203, 306]
-    # items3 = [100, 101, 303, 301]
-    # items4 = [201, 202, 203]
-    # # enter_restaurant(customer_id,table_number,num_people)
-    # comments1 = ["hi", "wat", None, "wat"]
-    # comments2 = ["hii", "watt", None, "watt"]
-    # comments3 = ["hiii", "wattt", None, "wattt"]
-    # comments4 = ["hiiii", "watttt", None, "wattt"]
-    # enter_restaurant(11111111, 8, 4)
-    # enter_restaurant(22222222, 9, 2)
-    # enter_restaurant(33333333, 1, 1)
-    # enter_restaurant(44444444, 8, 9)
-    # # make_order(table_id,customer_id,items)
-    # make_order(11111111, items, comments1)
-    # make_order(22222222, items2, comments2)
-    # make_order(33333333, items3, comments3)
-    # make_order(44444444, items4, comments4)
-    # edit_purchase(11111111, items[0], comments1[0], 2.34)
-    # edit_purchase(22222222, items2[1], comments2[0], 3.45)
-    # edit_purchase(33333333, items3[0], comments3[0], 5.67)
     return "Success", 200
 
 
@@ -209,42 +238,6 @@ def exit_test_case():
     make_payment(33333333)
     make_payment(44444444)
     return "Customers 11111111, 22222222, 33333333, 44444444 exited", 200
-
-
-@app.route('/api/exit')
-def web_exit_restaurant():
-    customer_id = request.args.get('plid')
-    print("Customer {} exiting restaurant".format(customer_id))
-    exit_restaurant(customer_id)
-    return ("Customer {} exited restaurant".format(customer_id)), 200
-
-
-# ADMIN METHODS
-@app.route('/api/admin/newmenu', methods=['GET', 'POST'])
-def admin_menu():
-    admin_verifier = request.args.get('keycode')
-    our_keycode = '12345'
-    print(admin_verifier)
-    if admin_verifier != our_keycode:
-        return render_template('404.html'), 404
-    else:
-        new_menu = request.get_json()
-        print("JSON Received")
-        print(new_menu)
-        return admin_verifier
-
-
-@app.route('/api/admin/flush', methods=['GET'])
-def admin_flush():
-    admin_verifier = request.args.get('keycode')
-    our_keycode = '12345'
-    print(admin_verifier)
-    if admin_verifier != our_keycode:
-        return render_template('404.html'), 404
-    else:
-        print("Flushing session and purchases")
-        flush_database()
-        return "Database flushed"
 
 
 if __name__ == '__main__':
