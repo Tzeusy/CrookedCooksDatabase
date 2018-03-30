@@ -20,4 +20,4 @@ from string import *
 #     enter_restaurant(customer_ids[i], table_number, num_people)
 #     make_order(customer_ids[i], purchased_items[i], comments[i])
 
-print(make_payment(15555215554))
+make_payment(11111111)

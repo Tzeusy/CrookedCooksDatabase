@@ -158,6 +158,8 @@ def get_stats(customer_id):
 def make_payment(customer_id, customer_token="tok_visa"):
     stripe.api_key = "sk_test_cH2UFk3P0H91hN1oTmo5HZhB"
     customer_price, _, _, _ = query_price(customer_id)
+    if not customer_price:
+        return False
     token_visa = customer_token
     token_visa = "tok_visa"
     try:
