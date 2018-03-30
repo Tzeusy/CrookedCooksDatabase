@@ -124,8 +124,11 @@ def web_get_session():
 def web_query_price():
     customer_id = request.args.get('plid')
     total_price, time_spent, orders, custom_price = query_price(customer_id)
-    return_string = "Customer {} has spent {} hours and has orders {} accruing up a total cost of {}"\
-        .format(customer_id, time_spent, orders, total_price)
+    # return_string = "Customer {} has spent {} hours and has orders {} accruing up a total cost of {}"\
+    #     .format(customer_id, time_spent, orders, total_price)
+    return_string = "{" + \
+                        '"customer_id":{}, "hours":{}, "orders": {}, "time_price":{}, "total_price": {}'.format(customer_id,time_spent,orders,orders,total_price)\
+                    + "}"
     return return_string, 200
 
 
@@ -157,6 +160,16 @@ def web_set_unavailable():
         return "Payment Success", 200
     else:
         return "Payment Fail", 500
+
+
+@app.route('/api/get_time_price', methods=['GET'])
+def web_get_time_price():
+    customer_id = request.args.get('plid')
+    table_number = request.args.get('table_number')
+    if not customer_id or not table_number:
+        return "Invalid parameters", 500
+    else:
+        return get_time_and_price(customer_id,table_number), 200
 
 
 @app.route('/api/exit')

@@ -119,13 +119,11 @@ def query_price(customer_id):
         timeSpent = int(cursor.fetchone()[0]/60+1)
         timePrice = timeSpent*2
         totalPrice = itemSum+timePrice+commentsSum
-
         cursor.execute("SELECT session.transaction_id, menu.name FROM session "
                        "INNER JOIN purchases ON purchases.transaction_id = session.transaction_id "
                        "INNER JOIN menu ON menu.food_id = purchases.food_id "
                        "WHERE session.transaction_id = {} "
                        "ORDER BY transaction_id".format(transaction_id))
-
         order_history = cursor.fetchall()
         items = [orders[1] for orders in order_history]
         # Returns totalPrice, timeSpent, orders, customPrice

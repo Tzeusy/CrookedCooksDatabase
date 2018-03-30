@@ -34,6 +34,22 @@ def getOrders(customer_id=None):
     return final_string
 
 
+def get_time_and_price(customer_id,table_number):
+    transaction_id, _, _, _, _ = get_stats(customer_id)
+    with ConnectionFromPool() as cursor:
+        cursor.execute("SELECT DATE_PART('hour',NOW() - start_time) FROM session WHERE transaction_id = {}".format(
+            transaction_id))
+        hours = int(cursor.fetchone()[0])
+        cursor.execute("SELECT DATE_PART('minute',NOW() - start_time) FROM session WHERE transaction_id = {}".format(transaction_id))
+        minutes = int(cursor.fetchone()[0])
+        if 0 < table_number < 50:
+            return "{"+'"time_price":{},"hours":{},"minutes":{}'.format(2 * (hours + 1), hours, minutes)+"}"
+        elif 50 <= table_number < 100:
+            return "{"+'"time_price":{},"hours":{},"minutes":{}'.format(0 * (hours + 1), hours, minutes)+"}"
+        else:
+            return False
+
+
 def get_session():
     sql_command = "SELECT * FROM session"
     with ConnectionFromPool() as cursor:
@@ -44,30 +60,15 @@ def get_session():
     final_string = '{{"session":[{}]}}'.format(jsonify_reply(session_headers,session_array))
     return final_string
 
-# def get_session(table_number):
-#     restaurant_name = "Crooked Cooks"
-#     restaurant_image = "https://i.imgur.com/XvlwlIn.jpg"
-#
-#     with ConnectionFromPool() as cursor:
-#         cursor.execute("SELECT column_name,data_type FROM information_schema.columns WHERE table_name = 'session'")
-#         menu_headers = cursor.fetchall()
-#         # print(menu_headers)
-#         cursor.execute("SELECT * FROM session")
-#         nonparsed_array = cursor.fetchall()
-#
-#     final_string = '{{"entries":[{}]}}'.format(jsonify_reply(menu_headers,nonparsed_array))
-#     return final_string
 
+def jsonify_reply(headers, row_information):
+    # Returns a string in {"abc":"def","efg":"hij",..},{"abc":"def","efg":"hij",..},... format
 
-
-def jsonify_reply(headers,rowInformation):
-    #Returns a string in {"abc":"def","efg":"hij",..},{"abc":"def","efg":"hij",..},... format
-
-    #Presumes headers is in [(column_name,data_type),...] format
-    #Presumes row information is in [(elem1, elem2,..n),...] format where n=number of columns
+    # Presumes headers is in [(column_name,data_type),...] format
+    # Presumes row information is in [(elem1, elem2,..n),...] format where n=number of columns
 
     infoArray = []
-    for i in range(len(rowInformation)):
+    for i in range(len(row_information)):
         elementInfo = "{"
         for j in range(len(headers)):
             #LEFT ELEMENT: Header will definitely be in string format
@@ -82,9 +83,9 @@ def jsonify_reply(headers,rowInformation):
                 elementInfo+='"'
             #True needs to be converted to true, same for False to false >.>
             if(headers[j][1]=='boolean'):
-                elementInfo+=str(rowInformation[i][j]).lower()
+                elementInfo+=str(row_information[i][j]).lower()
             else:
-                elementInfo += str(rowInformation[i][j])
+                elementInfo += str(row_information[i][j])
             if (headers[j][1] == 'text' or headers[j][1] == 'USER-DEFINED' or 'timestamp' in headers[j][1]):
                 elementInfo += '"'
             if(j!=len(headers)-1):
