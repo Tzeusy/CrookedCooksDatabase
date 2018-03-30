@@ -170,9 +170,9 @@ def make_payment(customer_id, customer_token="tok_visa"):
             transfer_group="placeholder_transfer"
         )
         exit_restaurant(customer_id)
-        return "Payment Success", 200
+        return True
     except:
-        return "Payment Fail", 500
+        return False
 
 if __name__ == "__main__":
     # flush_database()
