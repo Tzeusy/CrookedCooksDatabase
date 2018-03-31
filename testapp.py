@@ -68,7 +68,6 @@ class CreateUser(TestServerMethods):
         print("Visiting " + exit_address)
         response = r.content.decode("UTF-8")
 
-
     def test_create_crooked_cooks_user(self):
         print("Testing user for table number 0 < n < 50")
         register_address = self.base_address + "register?plid=23456&table_number=37&num_people=3"
@@ -86,13 +85,12 @@ class CreateUser(TestServerMethods):
         self.assertEqual(str(r.status_code),"200")
         self.assertEqual(response,"Invalid - entry for customer already exists in table")
 
-        #Exit user
+        # Exit user
         exit_address = self.base_address + "make_payment?plid=23456&token_id=tok_visa"
         print("Test user exiting restaurant")
         print("Visiting "+exit_address)
         r = requests.get(exit_address)
         response = r.content.decode("UTF-8")
-
 
     def test_insufficient_data_crooked_cooks(self):
         print("Testing if not enough data was supplied. Should return True")
@@ -140,15 +138,31 @@ class TestStatusCodes(TestServerMethods):
         r = requests.get(register_address)
         print("Visiting " + register_address)
         print("User created; now making orders")
-        r = requests.post(self.base_address + "make_order?plid=000234",json={"orders": [{"food_id": "103","comment": "helloooooooooooooooooooooo"}, {"food_id": "203","comment": "thereeeeeeeee"}, {"food_id": "101","comment": "niiiigeellll orrr briiiaaannnn"}]})
-        print(r.json())
+        order_address = self.base_address + "make_order?plid=000234"
+        print("Visiting " + order_address)
+        r = requests.post(order_address, json={
+            "orders": [{"food_id": "103", "comment": "testing"},
+                       {"food_id": "203", "comment": "onetwothree"},
+                       {"food_id": "101", "comment": "SADFSDFSDHFDSSDF"}]})
+        self.assertEqual(str(r.status_code), "200")
+        print("Orders made; retrieving orders")
+        existing_orders_address = self.base_address + "existing_orders?plid=000234"
+        print("Visiting " + existing_orders_address)
+        r = requests.get(existing_orders_address)
+        print("Testing price of his orders")
+        price_address = self.base_address + "query_price?plid=000234"
+        print("Visiting " + price_address)
+        r = requests.get(price_address)
+        # print(r.content.decode("UTF-8").replace("'",'"'))
+        price_information = json.loads(r.content.decode("UTF-8").replace("'", '"'))
+        print("Price of his order is " + str(price_information['total_price']) + ", should be 15.4")
+        self.assertEqual(price_information['total_price'], 15.4)
+        print("Testing exiting restaurant")
+        payment_address = self.base_address + "make_payment?plid=000234&token_id=tok_visa"
+        print("Visiting " + payment_address)
+        r = requests.get(payment_address)
+        self.assertEqual(str(r.status_code), "200")
 
-
-
-        orders_page = self.base_address + "existing_orders"
-        print("Visiting " + orders_page)
-        r = requests.get(orders_page)
-        self.assertTrue(is_json(r.content.decode("utf-8")))
 
 if __name__=="__main__":
     # suite = unittest.TestLoader().loadTestsFromTestCase(MenuTestCase)

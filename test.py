@@ -5,7 +5,7 @@ from random import choice, randint, random
 from string import ascii_lowercase
 import requests
 
-# print(query_price(234))
+print(query_price(23456))
 # base_address = "https://crookedcooks.herokuapp.com/api/"
 # print("Testing query price")
 # print("Creating User 000234")
@@ -29,13 +29,13 @@ import requests
 # r = requests.get(price_address)
 # # print(r.content.decode("UTF-8").replace("'",'"'))
 # price_information = json.loads(r.content.decode("UTF-8").replace("'",'"'))
-# print("Price of his order is " + str(price_information['total_price']) + ", should be ")
+# print("Price of his order is " + str(price_information['total_price']) + ", should be 15.4")
 # print("Testing exiting restaurant")
 # payment_address = base_address + "make_payment?plid=000234&token_id=tok_visa"
 # print("Visiting " + payment_address)
 # r = requests.get(payment_address)
-
-print(getOrders())
+#
+# # print(getOrders())
 
 
 

@@ -107,7 +107,7 @@ def query_price(customer_id):
         cursor.execute("SELECT sum FROM total_transaction_cost WHERE transaction_id={}".format(transaction_id))
         # print(cursor.fetchall())
         cursor_info = cursor.fetchone()
-        if len(cursor_info)!=0:
+        if cursor_info is not None:
             item_sum = cursor_info[0]
             cursor.execute("SELECT sum FROM total_comment_cost WHERE transaction_id={}".format(transaction_id))
             comments_sum = cursor.fetchone()[0]
