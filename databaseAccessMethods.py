@@ -142,8 +142,8 @@ def exit_restaurant(customer_id):
         orderString = "'"
         orderString += '{"'+'","'.join(item for item in orders)+'"}'
         orderString+="'"
-        cursor.execute("INSERT INTO history(transaction_id, food_orders, start_time, end_time, total_price)"
-                       "VALUES ({},{},to_timestamp('{}','YYYY-MM-DD HH24:MI:SS'),NOW(),{})".format(transaction_id,orderString,start_time,totalPrice))
+        cursor.execute("INSERT INTO history(transaction_id, customer_id, food_orders, start_time, end_time, total_price)"
+                       "VALUES ({},{},{},to_timestamp('{}','YYYY-MM-DD HH24:MI:SS'),NOW(),{})".format(transaction_id, customer_id, orderString,start_time,totalPrice))
         cursor.execute("DELETE FROM session WHERE transaction_id = {}".format(transaction_id))
         cursor.execute("DELETE FROM purchases WHERE transaction_id = {}".format(transaction_id))
 
