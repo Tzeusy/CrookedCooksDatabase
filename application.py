@@ -39,19 +39,6 @@ def web_make_order():
         return "Orders made", 200
 
 
-@app.route('/api/admin/set_delivered',methods=['GET'])
-def web_set_delivered():
-    customer_id = request.args.get('plid')
-    food_id = request.args.get('food_id')
-    if not customer_id or not food_id:
-        return "Insufficient parameters", 500
-    success = set_delivered(customer_id,food_id)
-    if success:
-        return "Done!", 200
-    else:
-        return "Failed", 500
-
-
 @app.route('/api/existing_orders')
 def get_orders():
     # Returns the orders of each unclosed transaction ID, and whether it has been fulfilled or not
@@ -137,8 +124,11 @@ def web_get_session():
 def web_query_price():
     customer_id = request.args.get('plid')
     total_price, time_spent, orders, custom_price = query_price(customer_id)
-    return_string = "Customer {} has spent {} hours and has orders {} accruing up a total cost of {}"\
-        .format(customer_id, time_spent, orders, total_price)
+    # return_string = "Customer {} has spent {} hours and has orders {} accruing up a total cost of {}"\
+    #     .format(customer_id, time_spent, orders, total_price)
+    return_string = "{" + \
+                    '"customer_id":{}, "hours":{}, "orders": {}, "time_price":{}, "total_price": {}'\
+                    .format(customer_id,time_spent,orders,orders,total_price) + "}"
     return return_string, 200
 
 
@@ -159,56 +149,28 @@ def web_make_payment():
         return "Payment Fail", 500
 
 
-@app.route('/api/create_test_case', methods=['GET'])
-def build_fake_customers():
-    food_options = [100, 101, 102, 103, 104, 105, 106, 201, 202, 203, 301, 302, 303, 304, 305, 306, 307]
-    customer_ids = [11111111, 22222222, 33333333, 44444444]
-    purchased_items = [[], [], [], []]
-    comments = [[], [], [], []]
-    rand_str = lambda n: ''.join([choice(ascii_lowercase) for _ in range(n)])
-    for i in range(4):
-        num_orders = randint(1, 9)
-        table_number = randint(1, 99)
-        num_people = randint(1, 8)
-        for j in range(num_orders):
-            rand_item = randint(0, len(food_options) - 1)
-            purchased_items[i].append(food_options[rand_item])
-            comments[i].append(rand_str(6))
-
-        enter_restaurant(customer_ids[i], table_number, num_people)
-        make_order(customer_ids[i], purchased_items[i], comments[i])
-
-    # items = [103, 106, 303, 202]
-    # items2 = [102, 203, 306]
-    # items3 = [100, 101, 303, 301]
-    # items4 = [201, 202, 203]
-    # # enter_restaurant(customer_id,table_number,num_people)
-    # comments1 = ["hi", "wat", None, "wat"]
-    # comments2 = ["hii", "watt", None, "watt"]
-    # comments3 = ["hiii", "wattt", None, "wattt"]
-    # comments4 = ["hiiii", "watttt", None, "wattt"]
-    # enter_restaurant(11111111, 8, 4)
-    # enter_restaurant(22222222, 9, 2)
-    # enter_restaurant(33333333, 1, 1)
-    # enter_restaurant(44444444, 8, 9)
-    # # make_order(table_id,customer_id,items)
-    # make_order(11111111, items, comments1)
-    # make_order(22222222, items2, comments2)
-    # make_order(33333333, items3, comments3)
-    # make_order(44444444, items4, comments4)
-    # edit_purchase(11111111, items[0], comments1[0], 2.34)
-    # edit_purchase(22222222, items2[1], comments2[0], 3.45)
-    # edit_purchase(33333333, items3[0], comments3[0], 5.67)
-    return "Success", 200
+@app.route('/api/admin/set_availability', methods=['GET'])
+def web_set_unavailable():
+    food_id = request.args.get('food_id')
+    bool = request.args.get('boolean')
+    is_bool_valid = (bool=='true' or bool=='false')
+    if not food_id or not bool or not is_bool_valid:
+        return "Invalid parameters", 500
+    if(set_availability(food_id,bool)):
+        return "Payment Success", 200
+    else:
+        return "Payment Fail", 500
 
 
-@app.route('/api/exit_test_case',methods=['GET'])
-def exit_test_case():
-    make_payment(11111111)
-    make_payment(22222222)
-    make_payment(33333333)
-    make_payment(44444444)
-    return "Customers 11111111, 22222222, 33333333, 44444444 exited", 200
+@app.route('/api/get_time_price', methods=['GET'])
+def web_get_time_price():
+    customer_id = int(request.args.get('plid'))
+    table_number = int(request.args.get('table_number'))
+    if not customer_id or not table_number:
+        return "Invalid parameters", 500
+    else:
+        print(get_time_and_price(customer_id,table_number))
+        return get_time_and_price(customer_id,table_number), 200
 
 
 @app.route('/api/exit')
@@ -234,17 +196,62 @@ def admin_menu():
         return admin_verifier
 
 
+# Unnecessary - session auto-empties now
 @app.route('/api/admin/flush', methods=['GET'])
 def admin_flush():
     admin_verifier = request.args.get('keycode')
     our_keycode = '12345'
     print(admin_verifier)
     if admin_verifier != our_keycode:
-        return render_template('404.html'), 404
+        return "Invalid Keycode", 500
     else:
         print("Flushing session and purchases")
         flush_database()
         return "Database flushed"
+
+
+@app.route('/api/admin/set_delivered',methods=['GET'])
+def web_set_delivered():
+    customer_id = request.args.get('plid')
+    food_id = request.args.get('food_id')
+    if not customer_id or not food_id:
+        return "Insufficient parameters", 500
+    success = set_delivered(customer_id,food_id)
+    if success:
+        return "Done!", 200
+    else:
+        return "Failed", 500
+
+
+# TEST CASES
+@app.route('/api/create_test_case', methods=['GET'])
+def build_fake_customers():
+    food_options = [100, 101, 102, 103, 104, 105, 106, 201, 202, 203, 301, 302, 303, 304, 305, 306, 307]
+    customer_ids = [11111111, 22222222, 33333333, 44444444]
+    purchased_items = [[], [], [], []]
+    comments = [[], [], [], []]
+    rand_str = lambda n: ''.join([choice(ascii_lowercase) for _ in range(n)])
+    for i in range(4):
+        num_orders = randint(1, 9)
+        table_number = randint(1, 99)
+        num_people = randint(1, 8)
+        for j in range(num_orders):
+            rand_item = randint(0, len(food_options) - 1)
+            purchased_items[i].append(food_options[rand_item])
+            comments[i].append(rand_str(6))
+
+        enter_restaurant(customer_ids[i], table_number, num_people)
+        make_order(customer_ids[i], purchased_items[i], comments[i])
+    return "Success", 200
+
+
+@app.route('/api/exit_test_case',methods=['GET'])
+def exit_test_case():
+    make_payment(11111111)
+    make_payment(22222222)
+    make_payment(33333333)
+    make_payment(44444444)
+    return "Customers 11111111, 22222222, 33333333, 44444444 exited", 200
 
 
 if __name__ == '__main__':
