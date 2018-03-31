@@ -105,12 +105,15 @@ def query_price(customer_id):
                        "INNER JOIN menu ON purchases.food_id = menu.food_id "
                        "GROUP BY session.transaction_id")
         cursor.execute("SELECT sum FROM total_transaction_cost WHERE transaction_id={}".format(transaction_id))
-        itemSum = cursor.fetchone()[0]
-        cursor.execute("SELECT sum FROM total_comment_cost WHERE transaction_id={}".format(transaction_id))
-        commentsSum = cursor.fetchone()[0]
-        if commentsSum is None:
-            commentsSum=0
-
+        if len(cursor.fetchall())!=0:
+            item_sum = cursor.fetchone()[0]
+            cursor.execute("SELECT sum FROM total_comment_cost WHERE transaction_id={}".format(transaction_id))
+            comments_sum = cursor.fetchone()[0]
+            if comments_sum is None:
+                comments_sum=0
+        else:
+            item_sum = 0
+            comments_sum = 0
         cursor.execute("SELECT (DATE_PART('day', NOW() - session.start_time) * 24 + "
                                    "DATE_PART('hour', NOW() - session.start_time)) * 60 + "
                                    "DATE_PART('minute', NOW() - session.start_time) as time_difference_minutes FROM session "
@@ -118,7 +121,7 @@ def query_price(customer_id):
         #For crooked cooks, it's $2 per hour
         timeSpent = int(cursor.fetchone()[0]/60+1)
         timePrice = timeSpent*2
-        totalPrice = itemSum+timePrice+commentsSum
+        totalPrice = item_sum+timePrice+comments_sum
 
         cursor.execute("SELECT session.transaction_id, menu.name FROM session "
                        "INNER JOIN purchases ON purchases.transaction_id = session.transaction_id "
@@ -129,7 +132,7 @@ def query_price(customer_id):
         orderHistory = cursor.fetchall()
         items = [orders[1] for orders in orderHistory]
         # Returns totalPrice, timeSpent, orders, customPrice
-        return (totalPrice,timeSpent,items,commentsSum)
+        return (totalPrice,timeSpent,items,comments_sum)
 
 
 def exit_restaurant(customer_id):
@@ -161,6 +164,7 @@ def make_payment(customer_id, customer_token="tok_visa"):
     stripe.api_key = "sk_test_cH2UFk3P0H91hN1oTmo5HZhB"
     customer_price, _, _, _ = query_price(customer_id)
     token_visa = customer_token
+    print('hi')
     try:
         charge = stripe.Charge.create(
             amount=int(100*customer_price),

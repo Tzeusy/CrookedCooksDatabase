@@ -1,8 +1,8 @@
-import psycopg2
+import stripe
+from databaseRequestMethods import *
+from databaseAccessMethods import *
+from random import choice, randint, random
+from string import ascii_lowercase
 
-a = 'a'
-
-try:
-    print(int(a))
-except Exception as exception:
-    print(exception.__class__.__name__)
+print(get_stats(56789))
+print(query_price(56789))

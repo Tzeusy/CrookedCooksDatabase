@@ -220,7 +220,7 @@ def web_exit_restaurant():
 
 
 # ADMIN METHODS
-@app.route('/api/admin/newmenu', methods=['GET', 'POST'])
+@app.route('/api/admin/new_menu', methods=['GET', 'POST'])
 def admin_menu():
     admin_verifier = request.args.get('keycode')
     our_keycode = '12345'
