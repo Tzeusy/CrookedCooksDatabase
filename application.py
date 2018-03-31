@@ -43,12 +43,11 @@ def web_make_order():
 def get_orders():
     # Returns the orders of each unclosed transaction ID, and whether it has been fulfilled or not
     # array_to_json(array_agg(session)),array_to_json(array_agg(menu))
-    customer_id = int(request.args.get('plid'))
-    if customer_id is not None:
-        print("Customer id provided - giving his order")
+    try:
+        customer_id = int(request.args.get('plid'))
         return getOrders(customer_id)
-    else:
-        print("Customer id not provided - giving all orders")
+    except:
+        print("Unable to convert customer id - invalid int?")
         return getOrders()
 
 
