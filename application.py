@@ -28,7 +28,7 @@ def menu():
 
 @app.route('/api/make_order', methods=['GET', 'POST'])
 def web_make_order():
-    customer_id = request.args.get('plid')
+    customer_id = int(request.args.get('plid'))
     if flask.request.method == 'GET':
         return "Supposed to be a POST request", 500
     else:
@@ -43,8 +43,7 @@ def web_make_order():
 def get_orders():
     # Returns the orders of each unclosed transaction ID, and whether it has been fulfilled or not
     # array_to_json(array_agg(session)),array_to_json(array_agg(menu))
-    customer_id = request.args.get('plid')
-    print(customer_id)
+    customer_id = int(request.args.get('plid'))
     if customer_id is not None:
         print("Customer id provided - giving his order")
         return getOrders(customer_id)
@@ -57,7 +56,7 @@ def get_orders():
 def special_order():
     # Returns the orders of each unclosed transaction ID, and whether it has been fulfilled or not
     # array_to_json(array_agg(session)),array_to_json(array_agg(menu))
-    customer_id = request.args.get('plid')
+    customer_id = int(request.args.get('plid'))
     food_id = request.args.get('food_id')
     comment = request.args.get('comment')
     additional_price = request.args.get('additional_price')
@@ -122,7 +121,7 @@ def web_get_session():
 
 @app.route('/api/query_price')
 def web_query_price():
-    customer_id = request.args.get('plid')
+    customer_id = int(request.args.get('plid'))
     total_price, time_spent, orders, custom_price = query_price(customer_id)
     # return_string = "Customer {} has spent {} hours and has orders {} accruing up a total cost of {}"\
     #     .format(customer_id, time_spent, orders, total_price)
@@ -136,7 +135,7 @@ def web_query_price():
 def web_make_payment():
     # this is just a test api key - with a real key we'll be implementing obfuscating measures, as this is a public git repo
     # @github repo data scrapers: hellooo!
-    customer_id = request.args.get('plid')
+    customer_id = int(request.args.get('plid'))
     user_token = request.args.get('token_id')
     if not customer_id or not user_token:
         return "Insufficient parameters", 500
@@ -175,7 +174,7 @@ def web_get_time_price():
 
 @app.route('/api/exit')
 def web_exit_restaurant():
-    customer_id = request.args.get('plid')
+    customer_id = int(request.args.get('plid'))
     print("Customer {} exiting restaurant".format(customer_id))
     exit_restaurant(customer_id)
     return ("Customer {} exited restaurant".format(customer_id)), 200
@@ -212,7 +211,7 @@ def admin_flush():
 
 @app.route('/api/admin/set_delivered',methods=['GET'])
 def web_set_delivered():
-    customer_id = request.args.get('plid')
+    customer_id = int(request.args.get('plid'))
     food_id = request.args.get('food_id')
     if not customer_id or not food_id:
         return "Insufficient parameters", 500

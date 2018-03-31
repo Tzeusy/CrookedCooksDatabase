@@ -23,13 +23,12 @@ print("Orders made; retrieving orders")
 existing_orders_address = base_address + "existing_orders?plid=000234"
 print("Visiting " + existing_orders_address)
 r = requests.get(existing_orders_address)
-print(r.content)
 print("Testing price of his orders")
 price_address = base_address + "query_price?plid=000234"
 print("Visiting " + price_address)
 r = requests.get(price_address)
 print(r.content.decode("UTF-8").replace("'",'"'))
-# price_information = json.loads(r.content.decode("UTF-8"))
+# price_information = json.loads(r.content.decode("UTF-8").replace("'",'"'))
 # print("Price of his order is " + price_information['total_price'])
 # make_payment("000234")
 
