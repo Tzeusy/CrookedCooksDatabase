@@ -136,6 +136,7 @@ def query_price(customer_id):
 
 
 def exit_restaurant(customer_id):
+    print("Customer {} exiting Restaurant".format(customer_id))
     with ConnectionFromPool() as cursor:
         transaction_id, table_number, _, num_people, start_time = get_stats(customer_id)
         totalPrice, _, orders,_ = query_price(customer_id)
@@ -146,6 +147,7 @@ def exit_restaurant(customer_id):
                        "VALUES ({},{},{},to_timestamp('{}','YYYY-MM-DD HH24:MI:SS'),NOW(),{})".format(transaction_id, customer_id, orderString,start_time,totalPrice))
         cursor.execute("DELETE FROM session WHERE transaction_id = {}".format(transaction_id))
         cursor.execute("DELETE FROM purchases WHERE transaction_id = {}".format(transaction_id))
+        return True
 
 
 def get_stats(customer_id):
