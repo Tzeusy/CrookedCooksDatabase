@@ -1,11 +1,9 @@
-import psycopg2
-from initialize_session import flush_database
 from connection_pool import ConnectionFromPool
 from datetime import datetime
 import stripe
 
 
-def enter_restaurant(customer_id,table_number,num_people):
+def enter_restaurant(customer_id, table_number, num_people):
     # Creates an entry in the SESSION table. Num people is necessary for Crooked Cooks specifically.
     # If already in restaurant, return ERROR.
     print("Testing Enter Restaurant")
@@ -18,48 +16,49 @@ def enter_restaurant(customer_id,table_number,num_people):
             return -1
 
     with ConnectionFromPool() as cursor:
-        if(customer_id>1000000000):
+        if customer_id > 1000000000:
             transaction_id = int(datetime.now().microsecond*customer_id/100000000)
         else:
             transaction_id = int(datetime.now().microsecond * customer_id / 1000000)
-        print("Creating a new session, with transaction id",transaction_id)
+        print("Creating a new session, with transaction id", transaction_id)
         print(transaction_id)
         print(table_number)
         print(customer_id)
         print(num_people)
         cursor.execute("INSERT INTO session(transaction_id,table_number,customer_id,num_people,start_time) "
-                       "VALUES({},{},{},{},NOW())".format(transaction_id, table_number,customer_id,num_people))
+                       "VALUES({},{},{},{},NOW())".format(transaction_id, table_number, customer_id, num_people))
         print("Creation success")
     return 1
 
 
-def make_order(customer_id,items,comments):
-    #Creates an entry in the PURCHASES table. Each entry requires a customer id (int), items (int array), and comments (text array)
+def make_order(customer_id, order_array, comments):
+    # Creates an entry in the PURCHASES table.
+    # Each entry requires a customer id (int), order_array (int array), and comments (text array)
     transaction_id, _, _, _, _ = get_stats(customer_id)
     with ConnectionFromPool() as cursor:
-        for i in range (len(items)):
+        for i in range(len(order_array)):
             cursor.execute("INSERT INTO purchases(transaction_id,food_id,delivered,comments,additional_price) "
-                           "VALUES({},{},false,'{}',0)".format(transaction_id,items[i],comments[i]))
+                           "VALUES({},{},false,'{}',0)".format(transaction_id, order_array[i], comments[i]))
 
 
-def order_satisfied(customer_id,food_id,comment):
+def order_satisfied(customer_id, food_id, comment):
     transaction_id, _, _, _, _ = get_stats(customer_id)
     sql_command = "WITH cte AS ( " \
-                 "SELECT default_id " \
-                 "FROM purchases " \
-                 "WHERE transaction_id = {} AND food_id = {} AND comments = '{}' " \
-                 "LIMIT 1) " \
-                 "UPDATE purchases s " \
-                 "SET delivered=true " \
-                 "FROM cte " \
-                 "WHERE s.default_id = cte.default_id".format(transaction_id,food_id,comment)
+                  "SELECT default_id " \
+                  "FROM purchases " \
+                  "WHERE transaction_id = {} AND food_id = {} AND comments = '{}' " \
+                  "LIMIT 1) " \
+                  "UPDATE purchases s " \
+                  "SET delivered=true " \
+                  "FROM cte " \
+                  "WHERE s.default_id = cte.default_id".format(transaction_id, food_id, comment)
     with ConnectionFromPool() as cursor:
-        for i in range (len(items)):
+        for i in range(len(items)):
             cursor.execute(sql_command)
     print("One Order satisfied")
 
 
-def edit_purchase(customer_id,food_id,comment,additional_price):
+def edit_purchase(customer_id, food_id, comment, additional_price):
     transaction_id, _, _, _, _ = get_stats(customer_id)
     sql_command = "WITH cte AS ( " \
                   "SELECT default_id " \
@@ -69,7 +68,7 @@ def edit_purchase(customer_id,food_id,comment,additional_price):
                   "UPDATE purchases s " \
                   "SET additional_price = {} " \
                   "FROM cte " \
-                  "WHERE s.default_id = cte.default_id".format(transaction_id,food_id,comment,additional_price)
+                  "WHERE s.default_id = cte.default_id".format(transaction_id, food_id, comment, additional_price)
     print('adding additional price for custom order')
     with ConnectionFromPool() as cursor:
         cursor.execute(sql_command)
@@ -80,7 +79,7 @@ def set_delivered(customer_id, food_id):
     transaction_id, _, _, _, _ = get_stats(customer_id)
     sql_command = "UPDATE purchases SET delivered = true WHERE " \
                   "CTID IN (SELECT CTID FROM purchases WHERE transaction_id = {} " \
-                  "AND delivered = false AND food_id = {} LIMIT 1)".format(transaction_id,food_id)
+                  "AND delivered = false AND food_id = {} LIMIT 1)".format(transaction_id, food_id)
     with ConnectionFromPool() as cursor:
         cursor.execute(sql_command)
         return True
@@ -99,23 +98,25 @@ def replace_menu(menu_array):
         cursor.execute('DROP TYPE IF EXISTS category CASCADE')
         cursor.execute("CREATE TYPE category AS ENUM('Main','Side','Veg');")
         cursor.execute(
-            'CREATE TABLE menu (itemid SERIAL PRIMARY KEY, food_category category, food_id integer, name text, description text, price numeric(4,2),currency text,image_link text,is_available boolean)')
+            'CREATE TABLE menu (itemid SERIAL PRIMARY KEY, food_category category, food_id integer, name text, '
+            'description text, price numeric(4,2),currency text,image_link text,is_available boolean)')
         for element in menu_array:
-            cursor.execute(
-                "INSERT INTO menu(food_category, food_id, name, description, price, currency, image_link, is_available) "
-                "VALUES('{}','{}','{}','{}','{}','{}','{}','{}')"
-                .format(element["food_category"], element["food_id"], element["name"],element["description"],
-                element["price"], element["currency"], element["image_link"], element["is_available"]))
+            print("Hello")
+            element_insertion_command = "INSERT INTO menu(food_category, food_id, name, description, price, currency, "\
+                                        "image_link, is_available) VALUES('{}',{},'{}','{}',{},'{}','{}',{})"\
+                                        .format(element["food_category"], int(element["food_id"]), element["name"],
+                                                element["description"], float(element["price"]), element["currency"],
+                                                element["image_link"], element["is_available"])
+            print("Executing " + element_insertion_command)
+            cursor.execute(element_insertion_command)
         return True
 
 
-
-
 def query_price(customer_id):
-    #Returns totalPrice, timeSpent, orders, customPrice
+    # Returns total_price, timeSpent, orders, customPrice
     with ConnectionFromPool() as cursor:
         transaction_id, _, _, _, _ = get_stats(customer_id)
-        #Can actually have this be a constantly existing VIEW in the database. I'll leave it as is for
+        # Can actually have this be a constantly existing VIEW in the database. I'll leave it as is for
         # the moment though - not sure how costly sql accesses are
         cursor.execute("DROP VIEW IF EXISTS total_transaction_cost")
         cursor.execute("CREATE VIEW total_transaction_cost AS "
@@ -137,18 +138,18 @@ def query_price(customer_id):
             cursor.execute("SELECT sum FROM total_comment_cost WHERE transaction_id={}".format(transaction_id))
             comments_sum = cursor.fetchone()[0]
             if comments_sum is None:
-                comments_sum=0
+                comments_sum = 0
         else:
             item_sum = 0
             comments_sum = 0
         cursor.execute("SELECT (DATE_PART('day', NOW() - session.start_time) * 24 + "
-                                   "DATE_PART('hour', NOW() - session.start_time)) * 60 + "
-                                   "DATE_PART('minute', NOW() - session.start_time) as time_difference_minutes FROM session "
-                                   "WHERE transaction_id={}".format(transaction_id))
-        #For crooked cooks, it's $2 per hour
-        timeSpent = int(cursor.fetchone()[0]/60+1)
-        timePrice = timeSpent*2
-        totalPrice = item_sum+timePrice+comments_sum
+                       "DATE_PART('hour', NOW() - session.start_time)) * 60 + "
+                       "DATE_PART('minute', NOW() - session.start_time) as time_difference_minutes FROM session "
+                       "WHERE transaction_id={}".format(transaction_id))
+        # For crooked cooks, it's $2 per hour
+        time_spent = int(cursor.fetchone()[0]/60+1)
+        time_price = time_spent*2
+        total_price = item_sum+time_price+comments_sum
 
         cursor.execute("SELECT session.transaction_id, menu.name FROM session "
                        "INNER JOIN purchases ON purchases.transaction_id = session.transaction_id "
@@ -156,22 +157,24 @@ def query_price(customer_id):
                        "WHERE session.transaction_id = {} "
                        "ORDER BY transaction_id".format(transaction_id))
 
-        orderHistory = cursor.fetchall()
-        items = [orders[1] for orders in orderHistory]
-        # Returns totalPrice, timeSpent, orders, customPrice
-        return (totalPrice,timeSpent,items,comments_sum)
+        order_history = cursor.fetchall()
+        ordered_items = [orders[1] for orders in order_history]
+        # Returns total_price, time_spent, orders, customPrice
+        return total_price, time_spent, ordered_items, comments_sum
 
 
 def exit_restaurant(customer_id):
     print("Customer {} exiting Restaurant".format(customer_id))
     with ConnectionFromPool() as cursor:
         transaction_id, table_number, _, num_people, start_time = get_stats(customer_id)
-        totalPrice, _, orders,_ = query_price(customer_id)
-        orderString = "'"
-        orderString += '{"'+'","'.join(item for item in orders)+'"}'
-        orderString+="'"
-        cursor.execute("INSERT INTO history(transaction_id, customer_id, food_orders, start_time, end_time, total_price)"
-                       "VALUES ({},{},{},to_timestamp('{}','YYYY-MM-DD HH24:MI:SS'),NOW(),{})".format(transaction_id, customer_id, orderString,start_time,totalPrice))
+        total_price, _, orders, _ = query_price(customer_id)
+        order_string = "'"
+        order_string += '{"'+'","'.join(item for item in orders)+'"}'
+        order_string += "'"
+        cursor.execute(
+            "INSERT INTO history(transaction_id, customer_id, food_orders, start_time, end_time, total_price)"
+            "VALUES ({},{},{},to_timestamp('{}','YYYY-MM-DD HH24:MI:SS'),NOW(),{})"
+            .format(transaction_id, customer_id, order_string, start_time, total_price))
         cursor.execute("DELETE FROM session WHERE transaction_id = {}".format(transaction_id))
         cursor.execute("DELETE FROM purchases WHERE transaction_id = {}".format(transaction_id))
         return True
@@ -186,7 +189,7 @@ def get_stats(customer_id):
         customer_id = item[3]
         num_people = item[4]
         start_time = item[5]
-        return transaction_id,table_number,customer_id,num_people,start_time
+        return transaction_id, table_number, customer_id, num_people, start_time
 
 
 def make_payment(customer_id, customer_token="tok_visa"):
@@ -195,7 +198,7 @@ def make_payment(customer_id, customer_token="tok_visa"):
     token_visa = customer_token
     print('hi')
     try:
-        charge = stripe.Charge.create(
+        stripe.Charge.create(
             amount=int(100*customer_price),
             currency="usd",
             source="{}".format(token_visa),
@@ -207,15 +210,16 @@ def make_payment(customer_id, customer_token="tok_visa"):
     except:
         return "Payment Fail", 500
 
+
 if __name__ == "__main__":
     # flush_database()
-    #items are just random food_ids. can find on menuList.
+    # items are just random food_ids. can find on menuList.
     items = [103,106,303,202]
     items2 = [102,203,306]
     items3 = [100,101,303,301]
     items4 = [201,202,203]
-    #enter_restaurant(customer_id,table_number,num_people)
-    comments1 = ["hi","wat",None,"wat"]
+    # enter_restaurant(customer_id,table_number,num_people)
+    comments1 = ["hi", "wat", None, "wat"]
     comments2 = ["hii", "watt", None, "watt"]
     comments3 = ["hiii", "wattt", None, "wattt"]
     comments4 = ["hiiii", "watttt", None, "wattt"]
@@ -228,7 +232,7 @@ if __name__ == "__main__":
     make_order(106, items2,comments2)
     make_order(918, items3,comments3)
     make_order(38150, items4,comments4)
-    edit_purchase(351,items[0],comments1[0],2.34)
+    edit_purchase(351, items[0],comments1[0],2.34)
     edit_purchase(106, items2[1], comments2[0], 3.45)
     edit_purchase(918, items3[0], comments3[0], 5.67)
     #query_price(table_id,customer_id)
