@@ -76,7 +76,7 @@ def edit_purchase(customer_id,food_id,comment,additional_price):
     print("Order Price changed")
 
 
-def set_delivered(customer_id,food_id):
+def set_delivered(customer_id, food_id):
     transaction_id, _, _, _, _ = get_stats(customer_id)
     sql_command = "UPDATE purchases SET delivered = true WHERE " \
                   "CTID IN (SELECT CTID FROM purchases WHERE transaction_id = {} " \
@@ -84,6 +84,31 @@ def set_delivered(customer_id,food_id):
     with ConnectionFromPool() as cursor:
         cursor.execute(sql_command)
         return True
+
+
+def set_availability(food_id, boolean):
+    sql_command = "UPDATE menu SET  = {} WHERE food_id = {}".format(boolean, food_id)
+    with ConnectionFromPool() as cursor:
+        cursor.execute(sql_command)
+        return True
+
+
+def replace_menu(menu_array):
+    with ConnectionFromPool() as cursor:
+        cursor.execute('DROP TABLE IF EXISTS menu CASCADE')
+        cursor.execute('DROP TYPE IF EXISTS category CASCADE')
+        cursor.execute("CREATE TYPE category AS ENUM('Main','Side','Veg');")
+        cursor.execute(
+            'CREATE TABLE menu (itemid SERIAL PRIMARY KEY, food_category category, food_id integer, name text, description text, price numeric(4,2),currency text,image_link text,is_available boolean)')
+        for element in menu_array:
+            cursor.execute(
+                "INSERT INTO menu(food_category, food_id, name, description, price, currency, image_link, is_available) "
+                "VALUES('{}','{}','{}','{}','{}','{}','{}','{}')"
+                .format(element["food_category"], element["food_id"], element["name"],element["description"],
+                element["price"], element["currency"], element["image_link"], element["is_available"]))
+        return True
+
+
 
 
 def query_price(customer_id):

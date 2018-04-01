@@ -39,6 +39,21 @@ def web_make_order():
         return "Orders made", 200
 
 
+@app.route('/api/admin/new_menu', methods=['GET', 'POST'])
+def admin_menu():
+    admin_verifier = request.args.get('keycode')
+    our_keycode = '12345'
+    print(admin_verifier)
+    if admin_verifier != our_keycode:
+        return render_template('404.html'), 404
+    else:
+        content = request.json
+        print("JSON Received")
+        print(content["menu"])
+        replace_menu(content["menu"])
+        return "Menu reset!", 200
+
+
 @app.route('/api/existing_orders')
 def get_orders():
     # Returns the orders of each unclosed transaction ID, and whether it has been fulfilled or not
@@ -180,18 +195,7 @@ def web_exit_restaurant():
 
 
 # ADMIN METHODS
-@app.route('/api/admin/new_menu', methods=['GET', 'POST'])
-def admin_menu():
-    admin_verifier = request.args.get('keycode')
-    our_keycode = '12345'
-    print(admin_verifier)
-    if admin_verifier != our_keycode:
-        return render_template('404.html'), 404
-    else:
-        new_menu = request.get_json()
-        print("JSON Received")
-        print(new_menu)
-        return admin_verifier
+
 
 
 # Unnecessary - session auto-empties now
