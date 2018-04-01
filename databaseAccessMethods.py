@@ -34,11 +34,14 @@ def enter_restaurant(customer_id, table_number, num_people):
 def make_order(customer_id, order_array, comments):
     # Creates an entry in the PURCHASES table.
     # Each entry requires a customer id (int), order_array (int array), and comments (text array)
+    # Input sanitization occurs here. "Comments" is the only category where the user has access to the database.
+    # Formatting as %s, (_,) allows psycopg2 to sanitize the input such that only one command passes to the execute()
+    # So no "Hello World!'; DROP TABLE menu;" shenanigans can occur
     transaction_id, _, _, _, _ = get_stats(customer_id)
     with ConnectionFromPool() as cursor:
         for i in range(len(order_array)):
             cursor.execute("INSERT INTO purchases(transaction_id,food_id,delivered,comments,additional_price) "
-                           "VALUES({},{},false,'{}',0)".format(transaction_id, order_array[i], comments[i]))
+                           "VALUES({},{},false,%s,0)".format(transaction_id, order_array[i]),(comments[i],))
 
 
 def order_satisfied(customer_id, food_id, comment):
