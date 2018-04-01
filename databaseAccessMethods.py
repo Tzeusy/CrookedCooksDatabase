@@ -86,7 +86,7 @@ def set_delivered(customer_id, food_id):
 
 
 def set_availability(food_id, boolean):
-    sql_command = "UPDATE menu SET  = {} WHERE food_id = {}".format(boolean, food_id)
+    sql_command = "UPDATE menu SET is_available = {} WHERE food_id = {}".format(boolean, food_id)
     with ConnectionFromPool() as cursor:
         cursor.execute(sql_command)
         return True
