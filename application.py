@@ -170,9 +170,9 @@ def web_set_unavailable():
     if not food_id or not bool or not is_bool_valid:
         return "Invalid parameters", 500
     if(set_availability(food_id,bool)):
-        return "Payment Success", 200
+        return "Availability config success", 200
     else:
-        return "Payment Fail", 500
+        return "Availability config fail", 500
 
 
 @app.route('/api/get_time_price', methods=['GET'])
