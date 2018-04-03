@@ -160,12 +160,15 @@ def query_price(customer_id):
         order_history = cursor.fetchall()
         ordered_items = [orders[1] for orders in order_history]
         # Returns total_price, time_spent, orders, customPrice
+        print("Customer {} queried. Parameters returned: {},{},{},{}"
+              .format(customer_id, total_price, time_spent, ordered_items, comments_sum))
         return total_price, time_spent, ordered_items, comments_sum
 
 
 def exit_restaurant(customer_id):
     print("Customer {} exiting Restaurant".format(customer_id))
     with ConnectionFromPool() as cursor:
+        print("Customer ID {} Inserted into history".format(customer_id))
         transaction_id, table_number, _, num_people, start_time = get_stats(customer_id)
         total_price, _, orders, _ = query_price(customer_id)
         order_string = "'"
@@ -175,8 +178,10 @@ def exit_restaurant(customer_id):
             "INSERT INTO history(transaction_id, customer_id, food_orders, start_time, end_time, total_price)"
             "VALUES ({},{},{},to_timestamp('{}','YYYY-MM-DD HH24:MI:SS'),NOW(),{})"
             .format(transaction_id, customer_id, order_string, start_time, total_price))
+        print("Customer ID {} inserted into history".format(customer_id))
         cursor.execute("DELETE FROM session WHERE transaction_id = {}".format(transaction_id))
         cursor.execute("DELETE FROM purchases WHERE transaction_id = {}".format(transaction_id))
+        print("Customer ID {} deleted from session & purchases".format(customer_id))
         return True
 
 
@@ -196,28 +201,27 @@ def make_payment(customer_id, customer_token="tok_visa"):
     stripe.api_key = "sk_test_cH2UFk3P0H91hN1oTmo5HZhB"
     customer_price, _, _, _ = query_price(customer_id)
     token_visa = customer_token
-    print('hi')
     try:
-        stripe.Charge.create(
+        charge = stripe.Charge.create(
             amount=int(100*customer_price),
             currency="usd",
             source="{}".format(token_visa),
             description="Test charge",
             transfer_group="placeholder_transfer"
         )
+        print("Customer {} successfully charged {}".format(customer_id, int(100*customer_price)))
         exit_restaurant(customer_id)
-        return "Payment Success", 200
+        return True
     except:
-        return "Payment Fail", 500
-
+        return False
 
 if __name__ == "__main__":
     # flush_database()
     # items are just random food_ids. can find on menuList.
-    items = [103,106,303,202]
-    items2 = [102,203,306]
-    items3 = [100,101,303,301]
-    items4 = [201,202,203]
+    items = [103, 106, 303, 202]
+    items2 = [102, 203, 306]
+    items3 = [100, 101, 303, 301]
+    items4 = [201, 202, 203]
     # enter_restaurant(customer_id,table_number,num_people)
     comments1 = ["hi", "wat", None, "wat"]
     comments2 = ["hii", "watt", None, "watt"]
