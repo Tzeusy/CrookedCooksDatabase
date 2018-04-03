@@ -23,7 +23,8 @@ def createHistory():
     with ConnectionFromPool() as cursor:
         cursor.execute('DROP TABLE IF EXISTS history CASCADE')
         cursor.execute('CREATE TABLE history (default_id SERIAL PRIMARY KEY, transaction_id integer NOT NULL, '
-                       'food_orders text[], start_time timestamp, end_time timestamp, total_price float)')
+                       'customer_id bigint, food_orders text[], start_time timestamp, end_time timestamp,'
+                       ' total_price float)')
 
 
 def flush_database():
@@ -33,4 +34,4 @@ def flush_database():
 
 
 if __name__ == "__main__":
-    flush_database()
+    createHistory()

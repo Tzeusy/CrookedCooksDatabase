@@ -171,17 +171,19 @@ def query_price(customer_id):
 def exit_restaurant(customer_id):
     print("Customer {} exiting Restaurant".format(customer_id))
     with ConnectionFromPool() as cursor:
-        print("Customer ID {} Inserted into history".format(customer_id))
         transaction_id, table_number, _, num_people, start_time = get_stats(customer_id)
         total_price, _, orders, _ = query_price(customer_id)
         order_string = "'"
         order_string += '{"'+'","'.join(item for item in orders)+'"}'
         order_string += "'"
+        print("INSERT INTO history(transaction_id, customer_id, food_orders, start_time, end_time, total_price)"
+            "VALUES ({},{},{},to_timestamp('{}','YYYY-MM-DD HH24:MI:SS'),NOW(),{})"
+            .format(transaction_id, customer_id, order_string, start_time, total_price))
         cursor.execute(
             "INSERT INTO history(transaction_id, customer_id, food_orders, start_time, end_time, total_price)"
             "VALUES ({},{},{},to_timestamp('{}','YYYY-MM-DD HH24:MI:SS'),NOW(),{})"
             .format(transaction_id, customer_id, order_string, start_time, total_price))
-        print("Customer ID {} inserted into history".format(customer_id))
+        print("Customer {} inserted into history".format(customer_id))
         cursor.execute("DELETE FROM session WHERE transaction_id = {}".format(transaction_id))
         cursor.execute("DELETE FROM purchases WHERE transaction_id = {}".format(transaction_id))
         print("Customer ID {} deleted from session & purchases".format(customer_id))
@@ -197,6 +199,8 @@ def get_stats(customer_id):
         customer_id = item[3]
         num_people = item[4]
         start_time = item[5]
+        print("Customer {} stats queried. Parameters returned: tid {}, tnum {}, nppl {}, stime {}"
+              .format(customer_id, transaction_id, table_number, num_people, start_time))
         return transaction_id, table_number, customer_id, num_people, start_time
 
 
@@ -204,6 +208,8 @@ def make_payment(customer_id, customer_token="tok_visa"):
     stripe.api_key = "sk_test_cH2UFk3P0H91hN1oTmo5HZhB"
     customer_price, _, _, _ = query_price(customer_id)
     token_visa = customer_token
+    # Comment this out when in production. tok_visa is a temp string
+    token_visa = "tok_visa"
     try:
         charge = stripe.Charge.create(
             amount=int(100*customer_price),

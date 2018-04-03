@@ -3,6 +3,7 @@ import json
 
 from databaseAccessMethods import *
 
+
 def getMenu(table_number):
     restaurant_name = "Crooked Cooks"
     restaurant_image = "https://i.imgur.com/XvlwlIn.jpg"
@@ -17,11 +18,12 @@ def getMenu(table_number):
     full_json = '{{"name":"{}","imagehyperlink":"{}","menu":[{}]}}'.format(restaurant_name, restaurant_image, final_string)
     return full_json
 
+
 def getOrders(customer_id=None):
     sql_command = "SELECT session.table_number,session.start_time," \
-                 "menu.price, purchases.food_id,purchases.delivered,purchases.comments,purchases.additional_price FROM session" \
-                 " INNER JOIN purchases ON purchases.transaction_id = session.transaction_id" \
-                 " INNER JOIN menu ON purchases.food_id = menu.food_id "
+                  "menu.price, purchases.food_id,purchases.delivered, purchases.comments, purchases.additional_price " \
+                  "FROM session INNER JOIN purchases ON purchases.transaction_id = session.transaction_id" \
+                  " INNER JOIN menu ON purchases.food_id = menu.food_id "
     if(customer_id is not None):
         sql_command+="WHERE session.customer_id = {}".format(customer_id)
 

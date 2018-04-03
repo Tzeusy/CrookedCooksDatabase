@@ -156,7 +156,7 @@ def web_make_payment():
 
     # account_id = "acct_1CAqhiB8IfO1QxmY"
     token_visa = "tok_visa"
-    if make_payment(customer_id,user_token):
+    if make_payment(customer_id, user_token):
         return "Payment Success", 200
     else:
         return "Payment Fail", 500
