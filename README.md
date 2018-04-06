@@ -18,6 +18,8 @@ Install PostgreSQL 9.6 on your computer. Relevant download links for different O
 Install the relevant Python packages via pip install -r /path/to/requirements.txt
 
 ## Features
+A suite of the API functionalities can be found on https://docs.google.com/spreadsheets/d/1yVGgf84yc4FbcBoM5QxjwzSaOsayuK390SyjBT0zg1k/edit?usp=sharing, using HTTP GET and POST requests for different functions.
+Concurrency is managed by psycopg2, and can (as of now) manage up to 20 concurrent requests - a limitation of Amazon RDS's Free Tier.
 
 ## Running the tests
 
