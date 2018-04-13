@@ -36,6 +36,3 @@ print(query_price(23456))
 # r = requests.get(payment_address)
 #
 # # print(getOrders())
-
-
-

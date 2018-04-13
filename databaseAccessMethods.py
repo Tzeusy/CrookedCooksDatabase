@@ -97,6 +97,7 @@ def set_availability(food_id, boolean):
 
 def replace_menu(menu_array):
     with ConnectionFromPool() as cursor:
+        print("Replacing menu")
         cursor.execute('DROP TABLE IF EXISTS menu CASCADE')
         cursor.execute('DROP TYPE IF EXISTS category CASCADE')
         cursor.execute("CREATE TYPE category AS ENUM('Main','Side','Veg');")
