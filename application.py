@@ -7,6 +7,7 @@ from string import ascii_lowercase
 
 from databaseRequestMethods import *
 from databaseAccessMethods import *
+from initialize_session import *
 # DatabaseAccessMethods are the VOID methods - that is, these methods take in parameters, and do not return values.
 # DatabaseRequestMethods are the JSON-returning methods, which are used to provide output to the API.
 
