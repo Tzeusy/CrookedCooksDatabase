@@ -60,8 +60,6 @@ def get_orders():
     # Returns the orders of each unclosed transaction ID, and whether it has been fulfilled or not
     # array_to_json(array_agg(session)),array_to_json(array_agg(menu))
     try:
-        print(request.args.get('plid'))
-        print(request.args.get('plid').replace("+",""))
         customer_id = int(request.args.get('plid').replace("+",""))
         return getOrders(customer_id)
     except:
@@ -91,7 +89,7 @@ def table_no():
     possible_parameters = ['table_number', 'plid', 'num_people']
     parameter_existence = [elem in request.args for elem in possible_parameters]
     table_number = request.args.get('table_number')
-    userid = request.args.get('plid')
+    userid = request.args.get('plid').replace("+","")
     num_people = request.args.get('num_people')
 
     try:
