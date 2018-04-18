@@ -30,8 +30,9 @@ def createHistory():
 def flush_database():
     createEmptyPurchases()
     createEmptySession()
-    createHistory()
+    # createHistory()
 
 
 if __name__ == "__main__":
-    createHistory()
+    flush_database()
+    # createHistory()

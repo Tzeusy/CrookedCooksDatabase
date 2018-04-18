@@ -44,6 +44,23 @@ class MenuTestCase(TestServerMethods):
     #     # print("Table 49 test:", r.status_code)
     #     print(r.content.decode("utf-8"))
     #     self.assertTrue(is_json(r.content.decode("utf-8")))
+    # def test_new_menu(self):
+    #     new_menu_address = self.base_address + "admin/new_menu?keycode=12345&restaurant_name=Crooked_Cooks"
+    #     new_menu_address = "http://localhost:5000/api/" + "admin/new_menu?keycode=12345&restaurant_name=Crooked_Cooks"
+    #     menu_address = self.base_address + "menu?table_number=" + self.tableNumber
+    #     r = requests.get(menu_address)
+    #     print(r.content)
+    #     postreq = requests.post(new_menu_address,json ={
+    #         "menu":[{"food_category": "Main", "food_id": "123", "name": "2312", "description": "312", "price": "31.2", "currency": "$S*", "image_link": "31", "is_available": True},
+    #                 {"food_category": "Main", "food_id": "123", "name": "2312", "description": "312", "price": "3.12", "currency": "$S*", "image_link": "31", "is_available": True},
+    #                 {"food_category": "Main", "food_id": "123", "name": "2312", "description": "312", "price": "2.37", "currency": "$S*", "image_link": "31", "is_available": True}]})
+    #     # r = requests.post(order_address, json={
+    #     #     "orders": [{"food_id": "103", "comment": "testing"},
+    #     #                {"food_id": "203", "comment": "onetwothree"},
+    #     #                {"food_id": "101", "comment": "SADFSDFSDHFDSSDF"}]})
+    #     print(postreq.status_code)
+    #     r = requests.get(menu_address)
+    #     print(r.content)
 
 
 class CreateUser(TestServerMethods):

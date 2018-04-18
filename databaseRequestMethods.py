@@ -6,7 +6,7 @@ from databaseAccessMethods import *
 
 def getMenu(table_number):
     restaurant_name = "Crooked Cooks"
-    restaurant_image = "https://i.imgur.com/XvlwlIn.jpg"
+    restaurant_image = "https://i.imgur.com/VXypCYQ.png"
 
     with ConnectionFromPool() as cursor:
         cursor.execute("SELECT column_name,data_type FROM information_schema.columns WHERE table_name = 'menu'")
