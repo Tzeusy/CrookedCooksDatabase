@@ -60,7 +60,7 @@ def get_orders():
     # Returns the orders of each unclosed transaction ID, and whether it has been fulfilled or not
     # array_to_json(array_agg(session)),array_to_json(array_agg(menu))
     try:
-        print(request.args.get('plid').replace("+",""))
+        print("Customer id is " + request.args.get('plid').replace("+",""))
         customer_id = int(request.args.get('plid').replace("+",""))
         return getOrders(customer_id)
     except:
