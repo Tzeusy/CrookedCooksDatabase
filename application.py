@@ -31,7 +31,7 @@ def menu():
 def web_make_order():
     customer_id = int(request.args.get('plid').replace("+",""))
     if flask.request.method == 'GET':
-        return "Supposed to be a POST request", 500
+        return "Supposed to be a POST request", 200
     else:
         content = request.json
         print(content["orders"])
@@ -60,6 +60,7 @@ def get_orders():
     # Returns the orders of each unclosed transaction ID, and whether it has been fulfilled or not
     # array_to_json(array_agg(session)),array_to_json(array_agg(menu))
     try:
+        print(request.args.get('plid').replace("+",""))
         customer_id = int(request.args.get('plid').replace("+",""))
         return getOrders(customer_id)
     except:
